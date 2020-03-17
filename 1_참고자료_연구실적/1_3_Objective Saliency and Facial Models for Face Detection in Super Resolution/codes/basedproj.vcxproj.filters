@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\test0626">
+      <UniqueIdentifier>{12950fd6-b93b-4f00-9a98-f64d7e04ec80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\pt0702">
+      <UniqueIdentifier>{c23ad7e3-a318-49d4-9f48-110396d336ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\pt0703">
+      <UniqueIdentifier>{a7b0045a-75b0-46aa-8613-265d69df19d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\pt0709">
+      <UniqueIdentifier>{48d90fbb-fa54-4053-97f4-6053c7e8c16f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\pt0718">
+      <UniqueIdentifier>{5094e710-042f-4634-b916-72b5b176db43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\pt1121">
+      <UniqueIdentifier>{3e99f574-1616-4158-8b68-fbbd2b1bfe85}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="4kfacedetect.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="emex.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="real-time-fsrd.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="reducedndetect.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="redusingsim.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="rtime.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="show1.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="show2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="suc1.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="teststatic.cpp">
+      <Filter>소스 파일\test0626</Filter>
+    </ClCompile>
+    <ClCompile Include="testrt.cpp">
+      <Filter>소스 파일\test0626</Filter>
+    </ClCompile>
+    <ClCompile Include="testusingadaptthersh.cpp">
+      <Filter>소스 파일\test0626</Filter>
+    </ClCompile>
+    <ClCompile Include="standard.cpp">
+      <Filter>소스 파일\pt0702</Filter>
+    </ClCompile>
+    <ClCompile Include="nonproc.cpp">
+      <Filter>소스 파일\pt0702</Filter>
+    </ClCompile>
+    <ClCompile Include="testrtnoncubic.cpp">
+      <Filter>소스 파일\test0626</Filter>
+    </ClCompile>
+    <ClCompile Include="standard_4k.cpp">
+      <Filter>소스 파일\pt0702</Filter>
+    </ClCompile>
+    <ClCompile Include="nonporc_4k.cpp">
+      <Filter>소스 파일\pt0702</Filter>
+    </ClCompile>
+    <ClCompile Include="nont_standard.cpp">
+      <Filter>소스 파일\pt0702</Filter>
+    </ClCompile>
+    <ClCompile Include="std_gray.cpp">
+      <Filter>소스 파일\pt0702</Filter>
+    </ClCompile>
+    <ClCompile Include="std_gray_nonthresh.cpp">
+      <Filter>소스 파일\pt0702</Filter>
+    </ClCompile>
+    <ClCompile Include="sg_using2sigma.cpp">
+      <Filter>소스 파일\pt0703</Filter>
+    </ClCompile>
+    <ClCompile Include="sg_using2sigma_cshow.cpp">
+      <Filter>소스 파일\pt0703</Filter>
+    </ClCompile>
+    <ClCompile Include="eval_std.cpp">
+      <Filter>소스 파일\pt0703</Filter>
+    </ClCompile>
+    <ClCompile Include="eval_non.cpp">
+      <Filter>소스 파일\pt0703</Filter>
+    </ClCompile>
+    <ClCompile Include="static_toshow.cpp">
+      <Filter>소스 파일\pt0703</Filter>
+    </ClCompile>
+    <ClCompile Include="rt_thshow.cpp">
+      <Filter>소스 파일\pt0703</Filter>
+    </ClCompile>
+    <ClCompile Include="static_nonproc.cpp">
+      <Filter>소스 파일\pt0703</Filter>
+    </ClCompile>
+    <ClCompile Include="rttrain.cpp">
+      <Filter>소스 파일\pt0709</Filter>
+    </ClCompile>
+    <ClCompile Include="ktrainstd.cpp">
+      <Filter>소스 파일\pt0709</Filter>
+    </ClCompile>
+    <ClCompile Include="m1.cpp">
+      <Filter>소스 파일\pt0709</Filter>
+    </ClCompile>
+    <ClCompile Include="m2.cpp">
+      <Filter>소스 파일\pt0709</Filter>
+    </ClCompile>
+    <ClCompile Include="rtusingemm.cpp">
+      <Filter>소스 파일\pt0718</Filter>
+    </ClCompile>
+    <ClCompile Include="T.cpp">
+      <Filter>소스 파일\pt0718</Filter>
+    </ClCompile>
+    <ClCompile Include="wonder.cpp">
+      <Filter>소스 파일\pt0718</Filter>
+    </ClCompile>
+    <ClCompile Include="p1121.cpp">
+      <Filter>소스 파일\pt1121</Filter>
+    </ClCompile>
+    <ClCompile Include="t22.cpp">
+      <Filter>소스 파일\pt1121</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

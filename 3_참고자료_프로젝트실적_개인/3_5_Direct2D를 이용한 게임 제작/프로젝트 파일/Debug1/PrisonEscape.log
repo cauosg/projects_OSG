@@ -1,0 +1,35 @@
+﻿빌드 시작: 2015-06-16 오후 8:58:41
+     1>2 노드의 "C:\Users\Administrator\Desktop\네겜프 끝\프로젝트 파일\PrisonEscape.vcxproj" 프로젝트(Build 대상)입니다.
+     1>ClCompile:
+         C:\Program Files (x86)\vs\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt DDUTIL.CPP DSUTIL.CPP PEMAIN.cpp Packet.cpp
+         Packet.cpp
+         PEMAIN.cpp
+     1>PEMAIN.cpp(274): warning C4244: '=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>PEMAIN.cpp(419): warning C4244: '+=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>PEMAIN.cpp(444): warning C4244: '-=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>PEMAIN.cpp(453): warning C4244: '+=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>PEMAIN.cpp(468): warning C4244: '-=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>PEMAIN.cpp(496): warning C4244: '=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>PEMAIN.cpp(504): warning C4244: '=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>PEMAIN.cpp(514): warning C4244: '=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>PEMAIN.cpp(526): warning C4244: '+=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>PEMAIN.cpp(542): warning C4244: '=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>PEMAIN.cpp(544): warning C4244: '=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>PEMAIN.cpp(591): warning C4244: '+=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+         DSUTIL.CPP
+         DDUTIL.CPP
+         코드를 생성하고 있습니다...
+         C:\Program Files (x86)\vs\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt tcpClientPacket.cpp
+         tcpClientPacket.cpp
+       Link:
+         C:\Program Files (x86)\vs\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Administrator\Desktop\네겜프 끝\프로젝트 파일\Debug\PrisonEscape.exe" /INCREMENTAL /NOLOGO ddraw.lib dsound.lib dxguid.lib ws2_32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Administrator\Desktop\네겜프 끝\프로젝트 파일\Debug\PrisonEscape.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Administrator\Desktop\네겜프 끝\프로젝트 파일\Debug\PrisonEscape.lib" /MACHINE:X86 Debug\DDUTIL.obj
+         Debug\DSUTIL.obj
+         Debug\PEMAIN.obj
+         Debug\Packet.obj
+         Debug\tcpClientPacket.obj
+         PrisonEscape.vcxproj -> C:\Users\Administrator\Desktop\네겜프 끝\프로젝트 파일\Debug\PrisonEscape.exe
+     1>"C:\Users\Administrator\Desktop\네겜프 끝\프로젝트 파일\PrisonEscape.vcxproj" 프로젝트를 빌드했습니다(Build 대상).
+
+빌드했습니다.
+
+경과 시간: 00:00:04.74

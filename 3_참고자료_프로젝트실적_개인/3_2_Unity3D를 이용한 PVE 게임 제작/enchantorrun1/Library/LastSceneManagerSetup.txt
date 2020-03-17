@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/RPG Character Animation Pack FREE/SuperCharacterController/Scenes/TestZone.unity
+  isLoaded: 1
+  isActive: 1

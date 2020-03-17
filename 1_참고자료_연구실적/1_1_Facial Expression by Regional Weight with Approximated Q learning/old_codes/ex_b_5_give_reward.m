@@ -1,0 +1,149 @@
+clear all;
+close all;
+clc;
+%% init
+max_iter = 100;
+reward_func = 1.00;
+
+proc_res = 100;
+show_res = 700;
+min_csize = 2;
+
+emotion_nums = 7;
+emotions = {'Angry','Disgusted','Fear','Happy','Neutral', 'Sad', 'Surprised'};
+
+basepath = 'C:\Emotion Estimation From Facial Images\Databases\After Pre-Pocessing\4DBs (7 Expressions)';
+datasets = {'JAFFE','KDEF', 'MUG', 'WSEFEP'};
+%% image collect
+nums_train = 1;
+
+for datanum=1:4
+    for i = 1:emotion_nums
+        train_pname = strcat(basepath, '\', datasets(datanum), '\Train\', emotions(i));
+        Images = imageSet(char(train_pname));
+        
+        tempnum_train = Images.Count;
+        %tot_imgset(:,:,1) = zeros(proc_size,proc_size);
+        for img_count = 1:tempnum_train
+            tot_imgset(:,:,nums_train + img_count - 1) = imresize(read(Images,img_count),[proc_res,proc_res]);
+        end
+        train_class(nums_train : nums_train + tempnum_train - 1) = i;
+        
+        nums_train = nums_train + tempnum_train;
+    end
+end
+nums_train = nums_train - 1;
+disp('img load complete')
+%%
+
+
+origin_grids(:,:) = [1,1,proc_res,proc_res];
+%% iteration
+for iter = 1:max_iter
+    
+    [num_grids,~] = size(origin_grids);
+    rewards = 0;
+    %out_grids = origin_grids;
+    out_grids = [];
+    clear rst_svm;
+    clear rst_mat;
+    clear rst_train;
+    %% division
+    for i=1:num_grids
+        [proc_len,nex_grids] = divide_grid(origin_grids(i,:));
+        min_check = min(min(nex_grids(:,3),nex_grids(:,4)));
+        if min_check<min_csize*2
+            continue;
+        end
+        %findreward
+        %% reward
+        
+        check_grids = grid_extract(origin_grids,nex_grids,i);
+        %% fragment
+        tic
+        [num_ci,~] = size(check_grids);
+        clear cimg;
+        %close all;
+        %clear tot_features;
+        tot_features = [];
+        for img_i = 1:nums_train
+            timg = tot_imgset(:,:,img_i);
+            temp_features = [];
+            for ci = 1:num_ci
+                
+                c_grid = check_grids(ci,:);
+                c_length = ceil(c_grid(3)/2);
+                
+                cp = [c_grid(1) + c_length, c_grid(2) + c_length];
+                c_rad = c_grid(3);
+                
+                nbp = [max(cp(1) - c_rad,1),max(cp(2) - c_rad,1)];%new begin point
+                nep = [min(cp(1) + c_rad, proc_res),min(cp(2) + c_rad, proc_res)];%new end point
+                
+                c_grid = cat(2,nbp,nep-nbp);
+                % extract hog
+                %cimg = imcrop(timg,c_grid);
+                cs = floor(min(c_grid(3),c_grid(4))/2);
+                [hogFeature, ~]=extractHOGFeatures(imcrop(timg,c_grid), 'CellSize',[cs cs]);
+                temp_features = cat(2,temp_features,hogFeature);
+                
+                %figure;imshow(cimg);
+            end
+            tot_features = [tot_features;temp_features];
+        end
+        toc
+        %% train
+        svm = fitcecoc(tot_features, train_class);
+        
+        %% testing
+        total_train_rst = svm.predict(tot_features);
+        
+        [~,t_accu] = getaccuracy(total_train_rst,train_class);
+        %     %% show
+        %     figure;
+        %     set(gcf, 'Position',  [500, 10, 700, 700]);
+        %
+        %     Ct= confusionmat(total_train_rst, train_class);
+        %     confusionchart(Ct,emotions);
+        %     title(strcat('dataset : All, confusion Matrix of test , accuracy : ',num2str(t_accu),'%'));
+        %
+        rwd = t_accu/100;
+        if rwd>max(rewards)
+            rst_svm = svm;
+            rst_mat = tot_features;
+            rst_train = total_train_rst;
+        end
+        rewards(i) = rwd;
+    end
+    %% output grid
+    [rwd_val, max_ind] = max(rewards);
+    
+    if rwd_val<0.001;
+        disp('training terminated by no more division');
+        break;%terminate training
+    end
+    [~,input_grids] = divide_grid(origin_grids(max_ind,:));
+    out_grids = grid_extract(origin_grids,input_grids,max_ind);
+    
+    [~,~,grids_to_draw] = size(out_grids);
+    %%
+    for di = 1:grids_to_draw
+        timg= insertObjectAnnotation(timg,'rectangle',out_grids(:,:,di),'','Color','green');
+    end
+    %figure;
+    imshow(imresize(timg,[show_res,show_res],'box'));
+    %set(gcf, 'Position',  [500, 10, 700, 700]);
+    title(strcat('epoch',num2str(iter),', grids'));
+    origin_grids = out_grids;
+    saveas(gcf,strcat('train_rst\grids_epoch',num2str(iter),'.png'));
+    save(strcat('train_rst\rewards_epoch',num2str(iter),'.mat'),'rewards');
+    %% show confumat
+    [errorsum_test,t_accu] = getaccuracy(rst_train,train_class);
+    %% show
+    set(gcf, 'Position',  [500, 10, 700, 700]);
+    
+    Ct= confusionmat(rst_train, train_class);
+    confusionchart(Ct,emotions);
+    title(strcat('dataset : All, confusion Matrix of test , accuracy : ',num2str(t_accu),'%'));
+    saveas(gcf,strcat('train_rst\confusion_epoch',num2str(iter),'.png'));    
+end
