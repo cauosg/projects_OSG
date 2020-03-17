@@ -3,12 +3,14 @@ using System.Collections;
 
 public class CameraController : MonoBehaviour
 {
-	GameObject cameraTarget;
+	public GameObject cameraTarget;
 	public float rotateSpeed;
 	float rotate;
 	public float offsetDistance;
 	public float offsetHeight;
 	public float smoothing;
+    public bool uprising = false;
+    public float risingangle = 60.0f;
 	Vector3 offset;
 	bool following = true;
 	Vector3 lastPosition;
@@ -22,7 +24,7 @@ public class CameraController : MonoBehaviour
 
 	void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.F))
+		if(Input.GetKeyDown(KeyCode.U))
 		{
 			if(following)
 			{
@@ -33,11 +35,11 @@ public class CameraController : MonoBehaviour
 				following = true;
 			}
 		} 
-		if(Input.GetKey(KeyCode.Q))
+		if(Input.GetKey(KeyCode.I))
 		{
 			rotate = -1;
 		} 
-		else if(Input.GetKey(KeyCode.E))
+		else if(Input.GetKey(KeyCode.O))
 		{
 			rotate = 1;
 		} 
@@ -47,8 +49,12 @@ public class CameraController : MonoBehaviour
 		}
 		if(following)
 		{
+            
 			offset = Quaternion.AngleAxis(rotate * rotateSpeed, Vector3.up) * offset;
-			transform.position = cameraTarget.transform.position + offset; 
+            if (uprising)
+                offset = Quaternion.AngleAxis(risingangle, Vector3.left) * offset;
+
+            transform.position = cameraTarget.transform.position + offset; 
 			transform.position = new Vector3(Mathf.Lerp(lastPosition.x, cameraTarget.transform.position.x + offset.x, smoothing * Time.deltaTime), 
 				Mathf.Lerp(lastPosition.y, cameraTarget.transform.position.y + offset.y, smoothing * Time.deltaTime), 
 				Mathf.Lerp(lastPosition.z, cameraTarget.transform.position.z + offset.z, smoothing * Time.deltaTime));
@@ -62,6 +68,10 @@ public class CameraController : MonoBehaviour
 
 	void LateUpdate()
 	{
-		lastPosition = transform.position;
+        if (uprising)
+            cameraTarget = GameObject.FindGameObjectWithTag("boss");
+        else
+            cameraTarget = GameObject.FindGameObjectWithTag("Player");
+        lastPosition = transform.position;
 	}
 }

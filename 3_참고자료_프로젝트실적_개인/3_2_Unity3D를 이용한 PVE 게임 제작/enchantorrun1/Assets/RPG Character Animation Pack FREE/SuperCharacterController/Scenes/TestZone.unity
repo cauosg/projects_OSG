@@ -2023,7 +2023,7 @@ Prefab:
       objectReference: {fileID: 9100000, guid: 3a268fa8223c82948a59e6e0b268b230, type: 2}
     - target: {fileID: 100080, guid: 0fd053b0bb4e3f64f9348aa052d23541, type: 3}
       propertyPath: m_TagString
-      value: Player
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 100080, guid: 0fd053b0bb4e3f64f9348aa052d23541, type: 3}
       propertyPath: m_Layer

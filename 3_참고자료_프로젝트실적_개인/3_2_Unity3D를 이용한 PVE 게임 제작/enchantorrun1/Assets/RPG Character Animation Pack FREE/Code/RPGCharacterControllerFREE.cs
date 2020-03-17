@@ -39,7 +39,8 @@ namespace RPGCharacterAnims{
 		#region Updates
 
 		void Update(){
-			if(rpgCharacterMovementController.MaintainingGround()){
+            //Debug.Log(rpgCharacterMovementController.isMoving);
+            if (rpgCharacterMovementController.MaintainingGround()){
 				//Revive.
 				if(rpgCharacterInputController.inputDeath){
 					if(isDead){
@@ -62,16 +63,7 @@ namespace RPGCharacterAnims{
 							Revive();
 						}
 					}
-					//Attacks.
-					if(rpgCharacterInputController.inputAttackL){
-						Attack(1);
-					}
-					if(rpgCharacterInputController.inputAttackR){
-						Attack(2);
-					}
-					if(rpgCharacterInputController.inputLightHit){
-						GetHit();
-					}
+					
 					//Shooting / Navmesh.
 					if(Input.GetMouseButtonDown(0)){
 						if(rpgCharacterMovementController.useMeshNav){
@@ -83,8 +75,21 @@ namespace RPGCharacterAnims{
 					}
 				}
 			}
-			//Slow time toggle.
-			if(Input.GetKeyDown(KeyCode.T)){
+            //Attacks.
+            if (rpgCharacterInputController.inputAttackL)
+            {
+                Attack(1);
+            }
+            if (rpgCharacterInputController.inputAttackR)
+            {
+                Attack(2);
+            }
+            if (rpgCharacterInputController.inputLightHit)
+            {
+                GetHit();
+            }
+            //Slow time toggle.
+            if (Input.GetKeyDown(KeyCode.T)){
 				if(Time.timeScale != 1){
 					Time.timeScale = 1;
 				}
@@ -141,11 +146,9 @@ namespace RPGCharacterAnims{
 		//2 = Right
 		public void Attack(int attackSide){
 			int attackNumber = 0;
-			if(canAction){
-				//Ground attacks.
-				if(rpgCharacterMovementController.MaintainingGround()){
-					//Stationary attack.
-					if(!rpgCharacterMovementController.isMoving){
+
+
+                    if (!rpgCharacterMovementController.isMoving){
 						//Armed or Unarmed.
 						int maxAttacks = 3;
 						//Left attacks.
@@ -161,11 +164,9 @@ namespace RPGCharacterAnims{
 						//Set the Locks.
 						Lock(true, true, true, 0, 0.7f);
 					}
-				}
 				//Trigger the animation.
 				animator.SetInteger("Action", attackNumber);
 				animator.SetTrigger("AttackTrigger");
-			}
 		}
 
 		public void AttackKick(int kickSide){

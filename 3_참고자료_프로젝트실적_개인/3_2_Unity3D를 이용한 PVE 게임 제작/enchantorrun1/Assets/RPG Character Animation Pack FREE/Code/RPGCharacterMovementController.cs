@@ -30,7 +30,7 @@ namespace RPGCharacterAnims{
 
 		//Jumping.
 		[HideInInspector] public bool canJump;
-		[HideInInspector] public bool canDoubleJump = false;
+		[HideInInspector] public bool canDoubleJump = true;
 		bool doublejumped = false;
 		public float gravity = 25.0f;
 		public float jumpAcceleration = 5.0f;
@@ -227,7 +227,10 @@ namespace RPGCharacterAnims{
 			canJump = false;
 			animator.SetInteger("Jumping", 1);
 			animator.SetTrigger("JumpTrigger");
-		}
+
+            canDoubleJump = true;
+
+        }
 
 		void Jump_SuperUpdate(){
 			Vector3 planarMoveDirection = Math3d.ProjectVectorOnPlane(superCharacterController.up, currentVelocity);
@@ -242,28 +245,30 @@ namespace RPGCharacterAnims{
 			verticalMoveDirection -= superCharacterController.up * gravity * superCharacterController.deltaTime;
 			currentVelocity = planarMoveDirection + verticalMoveDirection;
 			//Can double jump if starting to fall.
-			if(currentVelocity.y < 0){
+			//if(currentVelocity.y < 0){
 				DoubleJump();
-			}
+			//}
 		}
 
 		void DoubleJump_EnterState(){
-			currentVelocity += superCharacterController.up * CalculateJumpSpeed(doubleJumpHeight, gravity);
+			currentVelocity += (superCharacterController.fwd* 0.8f + superCharacterController.up*0.1f) * CalculateJumpSpeed(doubleJumpHeight, gravity);
 			canDoubleJump = false;
 			doublejumped = true;
 			animator.SetInteger("Jumping", 3);
 			animator.SetTrigger("JumpTrigger");
+
 		}
 
 		void DoubleJump_SuperUpdate(){
 			Jump_SuperUpdate();
-		}
+        }
 
 		void DoubleJump(){
 			if(!doublejumped){
 				canDoubleJump = true;
 			}
-			if(rpgCharacterInputController.current.jumpInput && canDoubleJump && !doublejumped){
+            //canDoubleJump = true;
+            if (rpgCharacterInputController.current.jumpInput && canDoubleJump && !doublejumped){
 				currentState = RPGCharacterState.DoubleJump;
 				rpgCharacterState = RPGCharacterState.DoubleJump;
 			}
@@ -327,6 +332,7 @@ namespace RPGCharacterAnims{
 			if(angle360 > 225 && angle360 < 315){
 				StartCoroutine(_Roll(4));
 			}
+            //Debug.Log(angle360);
 		}
 
 		/// <summary>

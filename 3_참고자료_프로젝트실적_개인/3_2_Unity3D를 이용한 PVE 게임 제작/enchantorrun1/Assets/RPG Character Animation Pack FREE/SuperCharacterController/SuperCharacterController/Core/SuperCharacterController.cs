@@ -87,6 +87,7 @@ public class SuperCharacterController : MonoBehaviour
     public float height { get { return Vector3.Distance(SpherePosition(head), SpherePosition(feet)) + radius * 2; } }
 
     public Vector3 up { get { return transform.up; } }
+    public Vector3 fwd { get { return transform.forward; } }
     public Vector3 down { get { return -transform.up; } }
     public List<SuperCollision> collisionData { get; private set; }
     public Transform currentlyClampedTo { get; set; }

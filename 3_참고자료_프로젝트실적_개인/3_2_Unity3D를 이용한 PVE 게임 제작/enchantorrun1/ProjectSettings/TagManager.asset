@@ -6,6 +6,12 @@ TagManager:
   tags:
   - Shadow
   - Collide
+  - Fire
+  - Ground
+  - fallingrock
+  - boss
+  - bossgate
+  - villagegate
   layers:
   - Default
   - TransparentFX
