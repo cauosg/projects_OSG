@@ -24,5 +24,8 @@
     <ClCompile Include="evaluation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cscomm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

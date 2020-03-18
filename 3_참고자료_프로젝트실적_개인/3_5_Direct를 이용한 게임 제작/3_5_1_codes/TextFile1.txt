@@ -1,0 +1,11 @@
+	if (_InitDirectSound())
+	{
+		Sound[0] = SndObjCreate(SoundOBJ, "BGM.WAV", 1);
+		Sound[1] = SndObjCreate(SoundOBJ, "death.WAV", 2);
+		Sound[2] = SndObjCreate(SoundOBJ, "huh.WAV", 3);
+		Sound[3] = SndObjCreate(SoundOBJ, "landing.WAV", 4);
+		Sound[4] = SndObjCreate(SoundOBJ, "puk.WAV", 5);
+		Sound[5] = SndObjCreate(SoundOBJ, "select.WAV", 6);
+		Sound[6] = SndObjCreate(SoundOBJ, "wind.WAV", 7);
+		SndObjPlay( Sound[0], DSBPLAY_LOOPING );
+	}
