@@ -11,6 +11,7 @@
 #include "opencv2/ml.hpp"
 #include <deque>
 #include <iostream>
+#include <fstream>
 #include <cstring>
 #include "Leap.h"
 #include <time.h>
@@ -49,6 +50,7 @@ string f_name = "run";
 const std::string fingerNames[] = { "Thumb", "Index", "Middle", "Ring", "Pinky" };
 const std::string boneNames[] = { "Metacarpal", "Proximal", "Middle", "Distal" };
 const std::string stateNames[] = { "STATE_INVALID", "STATE_START", "STATE_UPDATE", "STATE_END" };
+HANDLE hDevice = CreateFile(L"COM5", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
 
 bool iftrain = false;
 
@@ -236,7 +238,7 @@ public:
 
 void frameshow(int shownum) {
 	static bool isrun = false;
-
+		
 	static int prev = 0;
 	static int showing = 0;
 	vector<string> vnames = { "anims/1.mp4", "anims/2.mp4", "anims/3.mp4","anims/4.mp4" ,"anims/5.mp4" ,"anims/6.mp4" };
@@ -263,11 +265,11 @@ void frameshow(int shownum) {
 
 
 void classfier(params param, int fps) {//param : 현재 프레임에 대한 파라미터 클래스 , fps : 초당 프레임 수
-	const vector<string> sets = { "stable","run","jump","left","right","stop" };// 동작 set들의 이름들
+	const vector<string> sets = { "r,s,p" };// 동작 set들의 이름들
 	const int qsize = 30;//큐의 크기
 	static deque<Mat> frames;//frames : 큐 형태의 행렬 변수, 현재 프레임 기준 과거 30프레임 동안의 정보를 담고 있다.
 	static vector<motionsets> motions;//motions : 동작 set들의 클래스
-
+	static int prev_state = 0;
 	if (motions.empty())//동작 set들의 데이터가 비어있을 경우
 		for (int i = 0; i < sets.size(); i++) {
 			motions.push_back(motionsets(sets[i]));//sets[i]에 해당하는 이름을 가진 동작 set들의 데이터를 불러온다.
@@ -315,6 +317,11 @@ void classfier(params param, int fps) {//param : 현재 프레임에 대한 파라미터 클�
 		int itsclass = idxes.at<int>(0, 0);
 		//	cout << "this motion is " << sets[itsclass] << endl;
 		frameshow(itsclass);//판단한 동작의 애니메이션 실행
+		if (prev_state != itsclass) {
+			DWORD btsI;
+			WriteFile(hDevice, sets[itsclass], 9, &btsI, NULL);
+		}
+		prev_state = itsclass;
 	}
 }
 
@@ -428,7 +435,23 @@ void main() {
 
 	controller.setPolicy(Leap::Controller::POLICY_BACKGROUND_FRAMES);
 
+	//serial통신
+	
+	if (hDevice != INVALID_HANDLE_VALUE)
+	{
+		printf("Port opened! \n");
+		DCB lpTest;
+		GetCommState(hDevice, &lpTest);
+		lpTest.BaudRate = CBR_9600;
+		lpTest.ByteSize = 8;
+		lpTest.Parity = NOPARITY;
+		lpTest.StopBits = ONESTOPBIT;
+		SetCommState(hDevice, &lpTest);
 
+		DWORD btsIO;
+
+		WriteFile(hDevice, "083150090", 9, &btsIO, NULL);
+	}
 
 
 	while (1) {
@@ -452,4 +475,5 @@ void main() {
 
 	closesocket(ClientSocket); //소켓을 닫습니다.
 	WSACleanup();
+	CloseHandle(hDevice);
 }
