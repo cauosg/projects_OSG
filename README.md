@@ -1,7 +1,7 @@
 # projects_OSG
 project summary
 #
-각 프로젝트별 1줄 설명이 있으니 참조 바랍니다:
+각 프로젝트별 1줄 설명이 있으니 참고 바랍니다:
 
 (README)_1-line_descriptions.pdf
 #
