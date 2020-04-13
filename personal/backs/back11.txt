@@ -1,18 +1,21 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using UnityEngine;
-public class owner_parser : MonoBehaviour {
+public class owner_parser_1st : MonoBehaviour {
 
-    string url = "https://maplestory.nexon.com/Ranking/World/Total?c=%EB%A9%94%EC%A3%BC%ED%96%A5";
-    string datapath = "C:/Users/seong/Desktop/projects_OSG/projects_OSG/personal/maple_check/";
+    public string character_name;
+
+    string url = "https://maplestory.nexon.com/Ranking/World/Total?c=";
+    string datapath;
     StringReader strReader;
     string ranktable;
     bool parse_flag = false;
     // Use this for initialization
     void Start()
     {
+        datapath = Application.dataPath + "/datafiles/";
+        Debug.Log("dataPath : " + datapath);
         ranktable = null;
         Debug.Log("system init");
         StartCoroutine(Get_html());
@@ -21,7 +24,7 @@ public class owner_parser : MonoBehaviour {
 
     void WriteData(string strData,string datapath, string dataname)
     {
-        FileStream f = new FileStream(datapath + dataname, FileMode.CreateNew, FileAccess.Write);
+        FileStream f = new FileStream(datapath + dataname, FileMode.Create, FileAccess.Write);
         StreamWriter writer = new StreamWriter(f, System.Text.Encoding.Unicode);
         writer.WriteLine(strData);
         writer.Close();
@@ -45,7 +48,7 @@ public class owner_parser : MonoBehaviour {
 
         IEnumerator Get_html()
     {
-        WWW html_data = new WWW(url);
+        WWW html_data = new WWW(url + character_name);
         do
         {
             yield return null;
@@ -77,21 +80,23 @@ public class owner_parser : MonoBehaviour {
         if (now_line == null)
             return;
 
-        if (now_line.IndexOf("rank_table_wrap") > -1)
+        if (now_line.IndexOf("r_round_search") > -1)
         {
             Debug.Log("detected");
             parse_flag = true;
         }
         //if (now_line.IndexOf("rank_table_wrap") < 0)
         //    return;
-        if(parse_flag)
+        if (parse_flag)
+        {
             ranktable = ranktable + now_line + "\n"; ;
 
-        if (now_line.IndexOf("<!-- 종합랭킹 : End -->") > -1)
-        {
-            Debug.Log("1st parse complete");
-            WriteData(ranktable, datapath, "1st parse.txt");
-            parse_flag = false;
+            if (now_line.IndexOf("<tr class=") > -1)
+            {
+                Debug.Log("1st parse complete");
+                WriteData(ranktable, datapath, "1st parse.txt");
+                parse_flag = false;
+            }
         }
     }
 }
