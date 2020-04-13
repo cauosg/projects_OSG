@@ -3,74 +3,95 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using UnityEngine;
-using UnityEngine.Networking;
 public class owner_parser : MonoBehaviour {
 
     string url = "https://maplestory.nexon.com/Ranking/World/Total?c=%EB%A9%94%EC%A3%BC%ED%96%A5";
     string datapath = "C:/Users/seong/Desktop/projects_OSG/projects_OSG/personal/maple_check/";
-    UnityWebRequest request;
-    XmlDocument doc;
-
+    StringReader strReader;
+    string ranktable;
+    bool parse_flag = false;
     // Use this for initialization
     void Start()
     {
+        ranktable = null;
         Debug.Log("system init");
-        StartCoroutine(WebRequest());
+        StartCoroutine(Get_html());
 
     }
 
     void WriteData(string strData,string datapath, string dataname)
     {
-        FileStream f = new FileStream(datapath + dataname, FileMode.Append, FileAccess.Write);
+        FileStream f = new FileStream(datapath + dataname, FileMode.CreateNew, FileAccess.Write);
         StreamWriter writer = new StreamWriter(f, System.Text.Encoding.Unicode);
         writer.WriteLine(strData);
         writer.Close();
     }
 
-    public void Parse()
+    public string Parse()
     {
-        XmlWriterSettings xml_setting = new XmlWriterSettings();
-        xml_setting.Indent = true;
-        XmlWriter xml_writer = XmlWriter.Create(datapath + "data_xml.txt");
-        doc = new XmlDocument();
-        doc.LoadXml(request.downloadHandler.text.Trim());
+        string aLine, aParagraph = null;
 
-        doc.WriteContentTo(xml_writer);
-        xml_writer.Close();
+        aLine = strReader.ReadLine();
 
+        if (aLine == null)
+            return null;
 
-        //StringReader sr = new StringReader(request.downloadHandler.text);
-        //string src = sr.ReadLine();
-        //string[] src_temp;
+        aParagraph = aParagraph + aLine + " ";
+        aParagraph = aParagraph + "\n";
 
-        ////while (src != null) {
-        //int temp = src.IndexOf("rank_table");
-        //Debug.Log(temp);
-        //}
+        //Debug.Log("in Parsing process..");
+        return aLine;
     }
-        IEnumerator WebRequest()
+
+        IEnumerator Get_html()
     {
-        request = new UnityWebRequest();
-        using (request = UnityWebRequest.Get(url))
+        WWW html_data = new WWW(url);
+        do
         {
-            yield return request.SendWebRequest();
-            if (request.isNetworkError)
-            {
-                Debug.Log(request.error);
-            }
-            else
-            {
-                //Debug.Log(request.downloadHandler.text);
-                var results = request.downloadHandler.text;
-                WriteData(results,datapath, "Data.txt");
-                Debug.Log(results);
-                Parse();
-            }
+            yield return null;
+        }
+        while (!html_data.isDone);
+
+        if (html_data.error!=null)
+        {
+            Debug.Log("web.error"+html_data.error);
+            yield break;
+        }
+        else
+        {
+            Debug.Log("net_connected");
+            WriteData(html_data.text, datapath, "data.txt");
+            strReader = new StringReader(html_data.text);
         }
     }
 
     // Update is called once per frame
     void Update () {
-		
-	}
+
+        if (strReader == null)
+            return;
+
+        string now_line;
+        now_line = Parse();
+
+        if (now_line == null)
+            return;
+
+        if (now_line.IndexOf("rank_table_wrap") > -1)
+        {
+            Debug.Log("detected");
+            parse_flag = true;
+        }
+        //if (now_line.IndexOf("rank_table_wrap") < 0)
+        //    return;
+        if(parse_flag)
+            ranktable = ranktable + now_line + "\n"; ;
+
+        if (now_line.IndexOf("<!-- 종합랭킹 : End -->") > -1)
+        {
+            Debug.Log("1st parse complete");
+            WriteData(ranktable, datapath, "1st parse.txt");
+            parse_flag = false;
+        }
+    }
 }

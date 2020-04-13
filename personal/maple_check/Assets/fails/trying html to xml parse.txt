@@ -1,0 +1,64 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using UnityEngine;
+public class owner_parser : MonoBehaviour {
+
+    string url = "https://maplestory.nexon.com/Ranking/World/Total?c=%EB%A9%94%EC%A3%BC%ED%96%A5";
+    string datapath = "C:/Users/seong/Desktop/projects_OSG/projects_OSG/personal/maple_check/";
+
+
+    // Use this for initialization
+    void Start()
+    {
+        Debug.Log("system init");
+        StartCoroutine(WebRequest());
+
+    }
+
+    void WriteData(string strData,string datapath, string dataname)
+    {
+        FileStream f = new FileStream(datapath + dataname, FileMode.Append, FileAccess.Write);
+        StreamWriter writer = new StreamWriter(f, System.Text.Encoding.Unicode);
+        writer.WriteLine(strData);
+        writer.Close();
+    }
+
+    public void Parse(XmlDocument doc)
+    {
+        XmlWriterSettings xml_setting = new XmlWriterSettings();
+        xml_setting.Indent = true;
+        XmlWriter xml_writer = XmlWriter.Create(datapath + "data_xml.txt");
+        
+
+        doc.WriteContentTo(xml_writer);
+        xml_writer.Close();
+    }
+        IEnumerator WebRequest()
+    {
+        WWW request = new WWW(url);
+        do
+        {
+            yield return null;
+        }
+        while (!request.isDone);
+
+        if (request.error!=null)
+        {
+            Debug.Log("web.error"+request.error);
+            yield break;
+        }
+        else
+        {
+            Debug.Log("net_connected");
+            request.text;
+            Parse(doc);
+        }
+    }
+
+    // Update is called once per frame
+    void Update () {
+		
+	}
+}
