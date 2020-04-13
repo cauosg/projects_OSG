@@ -9,6 +9,7 @@ public class owner_parser : MonoBehaviour {
     void Start () {
         Debug.Log("system init");
         StartCoroutine(WebRequest());
+
     }
 
     string url = "https://maplestory.nexon.com/Ranking/World/Total?c=%EB%A9%94%EC%A3%BC%ED%96%A5";
@@ -26,8 +27,13 @@ public class owner_parser : MonoBehaviour {
     public void Parse()
     {
         StringReader sr = new StringReader(request.downloadHandler.text);
-        string source = sr.ReadLine();
+        string src = sr.ReadLine();
+        string[] src_temp;
 
+        //while (src != null) {
+        int temp = src.IndexOf("rank_table");
+        Debug.Log(temp);
+        //}
     }
         IEnumerator WebRequest()
     {
@@ -45,6 +51,7 @@ public class owner_parser : MonoBehaviour {
                 var results = request.downloadHandler.text;
                 WriteData(results);
                 Debug.Log(results);
+                Parse();
             }
         }
     }
