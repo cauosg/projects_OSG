@@ -37,6 +37,7 @@ public class owner_parser_1st : MonoBehaviour {
         StreamWriter writer = new StreamWriter(f, System.Text.Encoding.Unicode);
         writer.WriteLine(strData);
         writer.Close();
+        f.Close();
     }
 
     public string Parse()
