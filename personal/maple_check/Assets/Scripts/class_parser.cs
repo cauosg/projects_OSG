@@ -31,8 +31,8 @@ public class class_parser : MonoBehaviour {
     {
         Debug.Log("readstart");
         Debug.Log(" " + datapath + dataname);
-        FileStream f = new FileStream(datapath + dataname, FileMode.Open, FileAccess.Read);
-        reader = new StreamReader(f, System.Text.Encoding.Unicode);
+        //WWW html_data;
+        //reader = new StreamReader(f, System.Text.Encoding.Unicode);
         line_index = 0;
         //return reader.ReadLine();
     }
@@ -74,7 +74,9 @@ public class class_parser : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+        bool state_checker = 2 == GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().parse_state;
 
-        now_line = reader.ReadLine();
+        if(state_checker)
+            now_line = reader.ReadLine();
 	}
 }

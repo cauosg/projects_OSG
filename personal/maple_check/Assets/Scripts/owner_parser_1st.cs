@@ -8,16 +8,11 @@ public class owner_parser_1st : MonoBehaviour {
     string character_name, datapath, url, dataname;
     StringReader strReader;
     string ranktable;
-    bool parse_flag = false;
+    bool parse_flag, state_flag = false;
     // Use this for initialization
 
     void Start()
     {
-        Init();
-
-        Debug.Log("dataPath : " + datapath);
-        Debug.Log("system init");
-        StartCoroutine(Get_html());
 
     }
 
@@ -28,7 +23,12 @@ public class owner_parser_1st : MonoBehaviour {
         character_name = GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().character_name;
         url = GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().url;
 
+        string page_data = GameObject.Find("net_manager").GetComponent<Net_magnager>().page_data;
+        strReader = new StringReader(page_data);
         ranktable = null;
+
+        Debug.Log("dataPath : " + datapath);
+        Debug.Log("system init");
     }
 
     void WriteData(string strData)
@@ -55,34 +55,23 @@ public class owner_parser_1st : MonoBehaviour {
         return aLine;
     }
 
-        IEnumerator Get_html()
-    {
-        WWW html_data = new WWW(url + character_name);
-        do
-        {
-            yield return null;
-        }
-        while (!html_data.isDone);
-
-        if (html_data.error!=null)
-        {
-            Debug.Log("web.error"+html_data.error);
-            Debug.Log("\n nowurl : " + url + character_name);
-            yield break;
-        }
-        else
-        {
-            Debug.Log("net_connected");
-            strReader = new StringReader(html_data.text);
-        }
-    }
-
     // Update is called once per frame
     void Update () {
 
-        if (strReader == null)
-            return;
+        if (!state_flag)
+        {
+            if (GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().parse_state == 1)
+            {
+                state_flag = true;
+                Init();
+                Debug.Log("state trasintted to 1");
+            }
+            else
+                return;
+        }
 
+
+        //Debug.Log("on parse state");
         string now_line;
         now_line = Parse();
 
@@ -105,6 +94,8 @@ public class owner_parser_1st : MonoBehaviour {
                 Debug.Log("1st parse complete");
                 WriteData(ranktable);
                 parse_flag = false;
+                GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().set_parse_state(2);
+                state_flag = false;
             }
         }
     }
