@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Xml;
 
 
-public class class_parser : MonoBehaviour {
+public class Class_parser : MonoBehaviour {
 
     string character_name, datapath, url, dataname;
     string ranktable;
@@ -70,6 +70,10 @@ public class class_parser : MonoBehaviour {
                 end_ind = now_line.IndexOf(".png") + 4;//4
                 //
                 Record_data(now_line, begin_ind, end_ind);
+
+                string char_img_url = now_line.Substring(begin_ind, end_ind - begin_ind);
+                //set char_img
+                GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().set_char_image(char_img_url);
                 break;
 
             case 11://랭킹데이터
@@ -130,7 +134,7 @@ public class class_parser : MonoBehaviour {
     void Update () {
         if (!state_flag)
         {
-            if (GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().parse_state == 2)
+            if (GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().get_parse_state() == 2)
             {
                 state_flag = true;
                 Init();

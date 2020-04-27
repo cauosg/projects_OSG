@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-public class owner_parser_1st : MonoBehaviour {
+public class Owner_parser_1st : MonoBehaviour {
 
 
     string character_name, datapath, url, dataname;
@@ -61,7 +61,7 @@ public class owner_parser_1st : MonoBehaviour {
 
         if (!state_flag)
         {
-            if (GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().parse_state == 1)
+            if (GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().get_parse_state() == 1)
             {
                 state_flag = true;
                 Init();

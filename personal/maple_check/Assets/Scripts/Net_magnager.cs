@@ -18,7 +18,7 @@ public class Net_magnager : MonoBehaviour {
 
     IEnumerator Get_html()
     {
-        WWW html_data = GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().html_data;
+        WWW html_data = GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().get_html();
         do
         {
             yield return null;

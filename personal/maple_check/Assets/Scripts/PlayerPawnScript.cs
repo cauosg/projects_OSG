@@ -8,8 +8,9 @@ public class PlayerPawnScript : MonoBehaviour {
     public string url;
     public string data_path;
     public string parse_data_name;
-    public int parse_state = 0;
-    public WWW html_data;
+    int parse_state = 0;
+    WWW html_data;
+    string char_image_url;
     // Use this for initialization
     void Start () {
         url = "https://maplestory.nexon.com/Ranking/World/Total?c=";
@@ -24,8 +25,25 @@ public class PlayerPawnScript : MonoBehaviour {
 		
 	}
 
-    public void set_parse_state(int ind)
-    {
+
+    //html
+    public WWW get_html() {
+        return html_data;
+    }
+
+    //state
+    public void set_parse_state(int ind) {
         parse_state = ind;
+    }
+    public int get_parse_state() {
+        return parse_state;
+    }
+
+    //image
+    public void set_char_image(string in_url) {
+        char_image_url = in_url;
+    }
+    public string get_char_image() {
+        return char_image_url;
     }
 }
