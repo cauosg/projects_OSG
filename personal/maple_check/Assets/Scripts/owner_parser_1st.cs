@@ -88,9 +88,9 @@ public class Owner_parser_1st : MonoBehaviour {
         //    return;
         if (parse_flag)
         {
-            ranktable = ranktable + now_line + "\n"; ;
-
-            if (now_line.IndexOf("<tr class=") > -1)
+            ranktable = ranktable + now_line + "\n";
+            //Debug.Log((now_line.IndexOf("</tr>")));
+            if (now_line.IndexOf("</tr>") > -1)
             {
                 Debug.Log("1st parse complete");
                 WriteData(ranktable);

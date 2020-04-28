@@ -44,12 +44,13 @@ public class Class_parser : MonoBehaviour {
         //return reader.ReadLine();
     }
 
-    public void Record_data(string to_write, int begin_ind, int end_ind)
+    public string Record_data(string to_write, int begin_ind, int end_ind)
     {
         string subdata = to_write.Substring(begin_ind, end_ind - begin_ind);
         Debug.Log(subdata);
         subdata = subdata + '\n';
         writer.WriteLine(subdata);
+        return subdata;
     }
 
     public void Parameters()
@@ -69,48 +70,54 @@ public class Class_parser : MonoBehaviour {
                 begin_ind = now_line.IndexOf("src=") + 5;//4 + 1
                 end_ind = now_line.IndexOf(".png") + 4;//4
                 //
-                Record_data(now_line, begin_ind, end_ind);
+                
 
-                string char_img_url = now_line.Substring(begin_ind, end_ind - begin_ind);
+               // string char_img_url = ;
                 //set char_img
-                GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().set_char_image(char_img_url);
+                GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().set_char_image(Record_data(now_line, begin_ind, end_ind));
                 break;
 
             case 11://랭킹데이터
                 begin_ind = now_line.IndexOf("href=") + 6;//5 + 1
                 end_ind = now_line.IndexOf(" target=") - 1;//-1
-                Record_data(now_line, begin_ind, end_ind);
+                //Record_data(now_line, begin_ind, end_ind);
+                GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().set_char_rank(Record_data(now_line, begin_ind, end_ind));
                 break;
 
             case 12://소속,직업
                 begin_ind = now_line.IndexOf("dd") + 3;//2 + 1
                 //debug_ind = now_line.IndexOf(" / ");//
                 end_ind = now_line.IndexOf("</dd>");//-2
-                Record_data(now_line, begin_ind, end_ind);
+                //Record_data(now_line, begin_ind, end_ind);
+                GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().set_job(Record_data(now_line, begin_ind, end_ind));
                 break;
 
             case 15://레벨
                 begin_ind = now_line.IndexOf("Lv.") + 3;//2 + 1
                 end_ind = now_line.IndexOf("</td>");//-2
-                Record_data(now_line, begin_ind, end_ind);
+                //Record_data(now_line, begin_ind, end_ind);
+                GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().set_level(Record_data(now_line, begin_ind, end_ind));
                 break;
 
             case 16://경치
                 begin_ind = now_line.IndexOf("td") + 3;//2 + 1
                 end_ind = now_line.IndexOf("</td>");//-2
-                Record_data(now_line, begin_ind, end_ind);
+                //Record_data(now_line, begin_ind, end_ind);
+                GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().set_exp(Record_data(now_line, begin_ind, end_ind));
                 break;
 
             case 17://인기도
                 begin_ind = now_line.IndexOf("td") + 3;//2 + 1
                 end_ind = now_line.IndexOf("</td>");//-2
-                Record_data(now_line, begin_ind, end_ind);
+                //Record_data(now_line, begin_ind, end_ind);
+                GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().set_pop(Record_data(now_line, begin_ind, end_ind));
                 break;
 
             case 18://길드
                 begin_ind = now_line.IndexOf("td") + 3;//2 + 1
                 end_ind = now_line.IndexOf("</td>");//-2
-                Record_data(now_line, begin_ind, end_ind);
+                //Record_data(now_line, begin_ind, end_ind);
+                GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().set_guild(Record_data(now_line, begin_ind, end_ind));
 
 
 
