@@ -19,14 +19,14 @@ public class PlayerPawnScript : MonoBehaviour {
     public string guild;
 
     int parse_state = 0;
-    WWW html_data;
+    //WWW html_data;
     string char_image_url;
     // Use this for initialization
     void Start () {
-        url = "https://maplestory.nexon.com/Ranking/World/Total?c=";
+        url = "https://maplestory.nexon.com/Ranking/World/Total?c=" + character_name;
         data_path = Application.dataPath + "/datafiles/";
         parse_data_name = "1st parse.txt";
-        html_data = new WWW(url + character_name);
+        //html_data = new WWW(url);
         
     }
 
@@ -37,8 +37,8 @@ public class PlayerPawnScript : MonoBehaviour {
 
 
     //html
-    public WWW get_html() {
-        return html_data;
+    public string get_url() {
+        return url;
     }
 
     //state

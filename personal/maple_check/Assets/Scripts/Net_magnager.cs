@@ -18,7 +18,7 @@ public class Net_magnager : MonoBehaviour {
 
     IEnumerator Get_html()
     {
-        WWW html_data = GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().get_html();
+        WWW html_data = new WWW(GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().get_url());
         do
         {
             yield return null;
@@ -28,15 +28,16 @@ public class Net_magnager : MonoBehaviour {
         if (html_data.error != null)
         {
             Debug.Log("web.error" + html_data.error);
-            Debug.Log("\n nowurl :" + url + character_name);
+            Debug.Log("\n nowurl :" + url);
             yield break;
         }
         else
         {
             Debug.Log("net_connected");
+            Debug.Log(url);
             page_data = html_data.text;
             GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().set_parse_state(1);
-
+            //html_data.Dispose();
             //yield break;
         }
     }

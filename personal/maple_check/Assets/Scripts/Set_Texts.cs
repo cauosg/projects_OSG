@@ -32,11 +32,11 @@ public class Set_Texts : MonoBehaviour {
 	void Update () {
         if (!state_flag)
         {
-            if (GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().get_parse_state() == 4)
+            if (GameObject.Find("PlayerPawn").GetComponent<PlayerPawnScript>().get_parse_state() == 5)
             {
                 state_flag = true;
                 is_loaded = true;
-                Debug.Log("state trasintted to 4");
+                Debug.Log("state trasintted to 5");
             }
             else
                 return;
