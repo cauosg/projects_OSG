@@ -3,18 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class Tile_loader : MonoBehaviour {
+public class Tile_loader : MonoBehaviour
+{
 
     public string Tile_level = "";
-
+    private int width = 0;
+    private int height = 0;
     private string base_path;
 
-    private List<string> Tile_map = new List<string>();
+    private List<List<int>> Tile_map = new List<List<int>>();
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
 
-        
+
+    }
+
+    public void Init()
+    {
+
+
         base_path = Application.dataPath + "/Tiles/";
         Debug.Log(base_path + Tile_level + ".csv");
 
@@ -23,35 +32,76 @@ public class Tile_loader : MonoBehaviour {
         do
         {
             string a_line = reader.ReadLine();
-            if (a_line == null)
+            List<int> a_line_int = new List<int>();
+            int now_length = 0;
+
+            if (a_line == null)//비어있으면 중지
                 break;
-            Tile_map.Add(a_line);
+
+            for (int i = 0; i < a_line.Length; i++)//,를 제외한 숫자를 차례대로 입력
+            {
+                if (a_line[i] != ',')
+                {
+                    a_line_int.Add(a_line[i] - '0');
+                    now_length++;
+                }
+            }
+            if (now_length > width)//최대 길이를 width로 저장
+                width = now_length;
+            //Debug.Log(a_line_int[2]);
+            Tile_map.Add(a_line_int);
+            //Tile_map.
+
+            //Tile_map.Add(a_line);
         } while (true);
 
-        //TextAsset _txtFile = (TextAsset)Resources.Load(base_path + Tile_level + ".csv") as TextAsset;
-        //TextAsset _txtFile = (TextAsset)Resources.Load("level6.csv") as TextAsset;
-        //string Tile_info = _txtFile.text;
+        height = Tile_map.Count;
 
-        //Debug.Log(Tile_info);
-        //StringReader lines = new StringReader(base_path + Tile_level + ".csv");
+        Debug.Log("width:" + width);
+        Debug.Log("height:" + height);
 
-        //Debug.Log(lines.ReadLine());
 
         //int ind = 0;
-        //do
+        //while (ind < Tile_map.Count)
         //{
-        //    Tile_map[ind] = lines.ReadLine();
+        //    Debug.Log(Tile_map[ind++]);
         //}
-        //while (Tile_map[ind] != null);
-        int ind = 0;
-        while (ind < Tile_map.Count)
+
+        Print_all();
+    }
+
+    public void Print_all()
+    {
+        for(int j = 0; j < height; j++)
         {
-            Debug.Log(Tile_map[ind++]);
+            string print_string = "";
+
+            for (int i = 0; i < width; i++)
+            {
+                print_string = print_string + Tile_map[j][i].ToString();
+            }
+            Debug.Log("line" + (j+1).ToString() + " :"+ print_string);
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    public List<List<int>> Get_Tile_map()
+    {
+        return Tile_map;
+    }
+
+    public int Get_width()
+    {
+        return width;
+    }
+    public int Get_height()
+    {
+        return height;
+    }
 }
+

@@ -61,7 +61,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\BackTile_drawer.cs" />
+    <Compile Include="Assets\Scripts\BackTile_drawer_test.cs" />
+    <Compile Include="Assets\Scripts\Candy.cs" />
+    <Compile Include="Assets\Scripts\Candy_dispenser.cs" />
+    <Compile Include="Assets\Scripts\Level.cs" />
     <Compile Include="Assets\Scripts\Tile_loader.cs" />
+    <Compile Include="Assets\Scripts\Tile_loader_test.cs" />
     <Compile Include="Assets\Scripts\Tile_manager.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/seong/Desktop/projects_OSG/projects_OSG/personal/sweety_road_osg/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
