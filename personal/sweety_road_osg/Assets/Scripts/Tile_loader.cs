@@ -5,7 +5,24 @@ using System.IO;
 
 public class Tile_loader : MonoBehaviour
 {
-
+    /*
+ Tile_map : 
+ * 
+    0 : none
+    1 : hole
+    2 : Blue
+    3 : Red
+    4 : Green
+    5 : Yellow
+    6 : Purple
+    7 : Sausage
+    8 : Candy ball
+    9 : Rainbow
+ Backtile : 
+ * 0: A
+ * 1: B
+ * 2: hole
+ */
     public string Tile_level = "";
     private int width = 0;
     private int height = 0;
@@ -57,8 +74,8 @@ public class Tile_loader : MonoBehaviour
 
         height = Tile_map.Count;
 
-        Debug.Log("width:" + width);
-        Debug.Log("height:" + height);
+        //Debug.Log("width:" + width);
+        //Debug.Log("height:" + height);
 
 
         //int ind = 0;
@@ -80,7 +97,7 @@ public class Tile_loader : MonoBehaviour
             {
                 print_string = print_string + Tile_map[j][i].ToString();
             }
-            Debug.Log("line" + (j+1).ToString() + " :"+ print_string);
+            //Debug.Log("line" + (j+1).ToString() + " :"+ print_string);
         }
     }
 

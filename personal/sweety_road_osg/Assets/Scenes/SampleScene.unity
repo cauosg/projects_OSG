@@ -141,9 +141,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94b16b455a6139943b172de4b531d3bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tile_level: level6
-  base_path: 
-  Tile_map: []
 --- !u!4 &369837789
 Transform:
   m_ObjectHideFlags: 0
@@ -286,6 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 286016c2cf9af3240a68a75d7450895f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _Candy: {fileID: 1012859276041306, guid: 1270a029efc3c3d408105df139b698cf, type: 2}
 --- !u!1 &1618418069
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,6 +355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c28a9ed9e4a8c42b396dae71c94955, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Interval: 0
 --- !u!4 &1685001688
 Transform:
   m_ObjectHideFlags: 0

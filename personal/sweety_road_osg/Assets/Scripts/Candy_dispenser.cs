@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class Candy_dispenser : MonoBehaviour {
 
+    public GameObject _Candy;
+
     private List<List<int>> Tile_map;
     private int width, height;
     private List<int> dispense_pos;//from top
+    private List<List<int>> Candy_pos;
+
+    //forDebeug
+    private bool once = true;
     // Use this for initialization
     void Start () {
         dispense_pos = new List<int>();
@@ -44,7 +50,33 @@ public class Candy_dispenser : MonoBehaviour {
             for (int j = 0; j < height; j++)
             {
 
+                int candy_type = Tile_map[i][j];//transpose
+                if (candy_type < 2)
+                    continue;
+
+
+                //Debug.Log(Get_tilepos(i, j, res));
+                GameObject a_candy = Instantiate(_Candy, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+                a_candy.name = "[" + j + "][" + i + "]";
+                //float scale_factor = interval / a_candy.GetComponent<SpriteRenderer>().bounds.size.x;
+                //a_candy.transform.localScale = new Vector3(scale_factor, scale_factor, scale_factor);
+                //a_candy.transform.SetParent(GameObject.Find("Back_Tile_parent").transform);
             }
+        }
+    }
+
+    public void Dispense_one(int candy_type, Vector2 begin_pos, Vector2 target_pos, float interval)
+    {
+        //fordebug
+        //note, contructor사용 불가하므로 init 만들것
+        if (once)
+        {
+            //Vector2 begin_pos = new Vector2(0, 0);
+            GameObject Temp = Instantiate(_Candy);
+            Temp.GetComponent<Candy>().Init(candy_type, begin_pos, target_pos, interval);
+            //Candy a_candy = Instantiate(_Candy).GetComponent<Candy>();
+            //a_candy(candy_type, begin_pos, target_pos);
+            //once = false;
         }
     }
 

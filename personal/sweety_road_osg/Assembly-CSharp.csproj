@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\BackTile_drawer_test.cs" />
     <Compile Include="Assets\Scripts\Candy.cs" />
     <Compile Include="Assets\Scripts\Candy_dispenser.cs" />
+    <Compile Include="Assets\Scripts\Candy_test.cs" />
     <Compile Include="Assets\Scripts\Level.cs" />
     <Compile Include="Assets\Scripts\Tile_loader.cs" />
     <Compile Include="Assets\Scripts\Tile_loader_test.cs" />
