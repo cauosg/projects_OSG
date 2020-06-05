@@ -77,3 +77,6 @@ MonoBehaviour:
   Stop_anim_length: 0.5
   Stop_anim_spd: 4
   Stop_anim_power: 0.5
+  stay_range: 0.2
+  change_spd: 5
+  change_sensitivity: 4

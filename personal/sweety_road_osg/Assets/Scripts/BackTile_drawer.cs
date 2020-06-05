@@ -68,9 +68,12 @@ public class BackTile_drawer : MonoBehaviour {
         //Debug.Log(res);
         Get_camsize(res);
         Set_cp();
+        //List<List<bool>> valid_space = new List<List<bool>>();
         bool check_marker = true;//false:B, true:A
         for(int i = 0; i < width; i++)
         {
+            //List<bool> a_line_bool = new List<bool>();
+
             for (int j = 0; j < height; j++)
             {
                 check_marker = !check_marker;
@@ -106,7 +109,8 @@ public class BackTile_drawer : MonoBehaviour {
                 }
                 else//기본 캔디 배치 및 배열 넘겨주기
                 {
-                    GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Dispense_one(tile_type, Get_tilepos(i, 0, Backtile_type), Get_tilepos(i, j, Backtile_type), interval);
+                    GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Dispense_one(tile_type, Get_tilepos(i, 0, Backtile_type), Get_tilepos(i, j, Backtile_type), interval,i,j);
+                    //a_line_bool.Add()
                 }
             }
         }

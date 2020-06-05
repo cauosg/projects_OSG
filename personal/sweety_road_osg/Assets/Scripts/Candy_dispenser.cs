@@ -12,7 +12,7 @@ public class Candy_dispenser : MonoBehaviour {
     private List<List<int>> Candy_pos;
 
     //forDebeug
-    private bool once = true;
+    //private bool once = true;
     // Use this for initialization
     void Start () {
         dispense_pos = new List<int>();
@@ -36,7 +36,7 @@ public class Candy_dispenser : MonoBehaviour {
                 if (Tile_map[j][i] != 0)
                 {
                     dispense_pos.Add(j);
-                    Debug.Log("pos of dispense " + i + ": " + j);
+                    //Debug.Log("pos of dispense " + i + ": " + j);
                     break;
                 }
             }
@@ -56,8 +56,8 @@ public class Candy_dispenser : MonoBehaviour {
 
 
                 //Debug.Log(Get_tilepos(i, j, res));
-                GameObject a_candy = Instantiate(_Candy, new Vector3(0,0,0), Quaternion.identity) as GameObject;
-                a_candy.name = "[" + j + "][" + i + "]";
+                //GameObject a_candy = Instantiate(_Candy, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+               // a_candy.name = "[" + j + "][" + i + "]";
                 //float scale_factor = interval / a_candy.GetComponent<SpriteRenderer>().bounds.size.x;
                 //a_candy.transform.localScale = new Vector3(scale_factor, scale_factor, scale_factor);
                 //a_candy.transform.SetParent(GameObject.Find("Back_Tile_parent").transform);
@@ -65,19 +65,20 @@ public class Candy_dispenser : MonoBehaviour {
         }
     }
 
-    public void Dispense_one(int candy_type, Vector2 begin_pos, Vector2 target_pos, float interval)
+    public void Dispense_one(int candy_type, Vector2 begin_pos, Vector2 target_pos, float interval,int i, int j)
     {
         //fordebug
         //note, contructor사용 불가하므로 init 만들것
-        if (once)
-        {
-            //Vector2 begin_pos = new Vector2(0, 0);
-            GameObject Temp = Instantiate(_Candy);
-            Temp.GetComponent<Candy>().Init(candy_type, begin_pos, target_pos, interval);
-            //Candy a_candy = Instantiate(_Candy).GetComponent<Candy>();
-            //a_candy(candy_type, begin_pos, target_pos);
-            //once = false;
-        }
+        //if (once)
+        //{
+        //Vector2 begin_pos = new Vector2(0, 0);
+        GameObject a_candy = Instantiate(_Candy);
+        a_candy.GetComponent<Candy>().Init(candy_type, begin_pos, target_pos, interval,i,j, "Candy[" + i + "][" + j + "]");
+        a_candy.name = "Candy[" + i + "][" + j + "]";
+        //Candy a_candy = Instantiate(_Candy).GetComponent<Candy>();
+        //a_candy(candy_type, begin_pos, target_pos);
+        //once = false;
+        //}
     }
 
     // Update is called once per frame

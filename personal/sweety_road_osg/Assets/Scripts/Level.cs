@@ -5,9 +5,9 @@ using UnityEngine;
 public class Level : MonoBehaviour {
 
     public float Interval;// { get { return Interval; } set { Interval = value; } }//stack overflow발생
-
+    public int BackTile_width, BackTile_height;
     private List<List<int>> Tile_map;
-    private int BackTile_width, BackTile_height;
+    
     private Vector2 level_res;//;// { get { return level_res; } set { } }
 	// Use this for initialization
 	void Start () {
@@ -41,6 +41,7 @@ public class Level : MonoBehaviour {
     {
         return level_res;
     }
+
 	// Update is called once per frame
 	void Update () {
 		
