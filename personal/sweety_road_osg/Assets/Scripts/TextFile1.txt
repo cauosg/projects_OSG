@@ -1,0 +1,195 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Candy_dispenser : MonoBehaviour {
+
+    public GameObject _Candy;
+
+    public bool is_drop = true;
+    private List<List<int>> Tile_map,empty_pos;
+    private int width, height;
+    private int[] pos_ind;
+
+    //private List<List<GameObject>> tot_candies;
+
+    private List<int> dispense_pos, dispense_candies;//from top
+    //private List<GameObject> dispense_candies;
+    //private List<int>[] dispense_candies;//,Candy_pos;
+    //private List<int> ;
+    
+
+    private Vector2 center_point;
+    private float interval;
+    //private bool is_drop = true;
+
+    //forDebeug
+    //private bool once = true;
+    // Use this for initialization
+    void Start () {
+        dispense_pos = new List<int>();
+        dispense_candies = new List<int>();
+
+        empty_pos = new List<List<int>>();
+
+        pos_ind = new int[2];
+        //dispense_candies = new List<>();
+    }
+
+    public void Init()
+    {
+        
+    }
+
+    public void Receive_Tilemap(List<List<int>> input_map,int w, int h, float interv, Vector2 cp)
+    {
+        this.center_point = GameObject.Find("BackTile_drawer").GetComponent<BackTile_drawer>().center_point;
+        this.interval = GameObject.Find("BackTile_drawer").GetComponent<BackTile_drawer>().interval;
+        //Debug.Log("dispensers interval is " + interval);
+        //Debug.Log("dispensers cp is " + center_point);
+
+        Tile_map = input_map;
+        width = w;
+        height = h;
+
+        //dispense_candies = new List<int>[width];
+        Debug.Log(dispense_candies);
+        //Debug.Log(dispense_candies.Length);
+    }
+
+    public void Dispense_pos()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            empty_pos.Add(new List<int>());
+            dispense_candies.Add(0);
+            for (int j = 0; j < height; j++)
+            {
+
+                if (Tile_map[j][i] != 0)
+                {
+                    dispense_pos.Add(j);
+                    //Debug.Log("pos of dispense " + i + ": " + j);
+                    break;
+                }
+            }
+        }
+        Debug.Log(dispense_candies.Count);
+    }
+
+    public void Dispense()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            List<int> Temp = new List<int>();
+            Temp.Add(0);
+            empty_pos.Add(Temp);
+            for (int j = 0; j < height; j++)
+            {
+
+                int candy_type = Tile_map[i][j];//transpose
+                if (candy_type < 2)
+                    continue;
+
+
+                //Debug.Log(Get_tilepos(i, j, res));
+                //GameObject a_candy = Instantiate(_Candy, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+               // a_candy.name = "[" + j + "][" + i + "]";
+                //float scale_factor = interval / a_candy.GetComponent<SpriteRenderer>().bounds.size.x;
+                //a_candy.transform.localScale = new Vector3(scale_factor, scale_factor, scale_factor);
+                //a_candy.transform.SetParent(GameObject.Find("Back_Tile_parent").transform);
+            }
+        }
+    }
+
+    public void Dispense_one(int candy_type, int i, int j)
+    {
+        //fordebug
+        //note, contructor사용 불가하므로 init 만들것
+        //Debug.Log("this candy is [" + i + "][" + j + "]");
+
+        GameObject a_candy = Instantiate(_Candy);
+        a_candy.GetComponent<Candy>().Init(candy_type, Get_candypos(i,0), Get_candypos(i,j), interval,i, j, "Candy[" + i + "][" + j + "]");
+        a_candy.name = "Candy[" + i + "][" + j + "]";
+        //Debug.Log("this candy is [" + Get_candypos(i, 0) + "][" + Get_candypos(i, j) + "]");
+    }
+
+    private Vector3 Get_candypos(int i, int j)
+    {
+        float zorder = -0.2f;
+        //cp-4step : origin
+        //Vector3 out_pos;
+        float x_pos = center_point.x - (4 - i) * interval;
+        float y_pos = center_point.y - (j - 4) * interval;
+        //Debug.Log("interval is " + interval);
+        //Debug.Log(j.ToString()+ "," + i.ToString() + ":"+ x_pos.ToString() + "," + y_pos.ToString());
+       
+
+        return new Vector3(x_pos, y_pos, zorder);
+    }
+    public void Refill_plz(int i, int j)
+    {
+        dispense_candies[i]++;
+        //Debug.Log(empty_pos.Count);
+        empty_pos[i].Add(j);
+        //Debug.Log("Candy Refill is requested at [" + i + "][" + j + "]");
+    }
+
+    public void Candy_drop()
+    {
+        if (is_drop)
+            return;
+
+        for(int i = 0; i<width; i++)
+        {
+            //Debug.Log("dispense_candies of [" + i + "] is :" + dispense_candies[i]);
+            //.Log("empty pos of [" + i + "] is :");
+            //for (int j = 0; j < empty_pos[i].Count; j++)
+            //{
+            //    Debug.Log("eptypos : " + empty_pos[i][j]);
+            //}
+            if (dispense_candies[i] < 1)
+                continue;
+            int[] move_steps = new int[height];
+            //for (int j = 0; j<height; j++)
+            //for (int j = 0; j < height; j++)
+            //{
+            //    move_steps[j] = 0;
+            //}
+            for (int j = 0; j < empty_pos[i].Count; j++)
+            {
+                for(int k = 0; k < empty_pos[i][j]; k++)
+                {
+                    move_steps[k]++;
+                }
+            }
+            //Debug.Log("move steps of [" + i + "]");
+            //for (int j = 0; j < height; j++)
+            //    Debug.Log(move_steps[j]);
+
+
+        }
+        is_drop = true ;//1회실행
+
+    }
+
+
+    //    public void Refill_plz(int i, int j)
+    //{
+    //    GameObject a_candy = Instantiate(_Candy);
+
+    //    int[] valid_candies = GameObject.Find("Level_manager").GetComponent<Level>().valid_candies;
+    //    int now_type = Random.Range(0, valid_candies.Length - 1);
+
+    //    a_candy.GetComponent<Candy>().Init(now_type, Get_candypos(i, 0), Get_candypos(i, dispense_pos[j]), interval, i, j, "Candy[" + i + "][" + j + "]");
+    //    a_candy.name = "Candy[" + i + "][" + j + "]";
+
+
+    //}
+
+    // Update is called once per frame
+    void Update () {
+        if (!is_drop)
+            Candy_drop();
+	}
+}

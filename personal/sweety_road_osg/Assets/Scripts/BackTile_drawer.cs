@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class BackTile_drawer : MonoBehaviour {
@@ -22,8 +21,9 @@ public class BackTile_drawer : MonoBehaviour {
      * 2: hole
      */
     public GameObject[] Tiles;
-    private float interval;
-    private Vector2 center_point;
+    public float interval;
+    public Vector2 center_point;
+    public int queues = 7;
     private float cam_ratio;
     //private Vector2 level_res;
 	// Use this for initialization
@@ -64,10 +64,11 @@ public class BackTile_drawer : MonoBehaviour {
 
     public void Draw_BackTile(List<List<int>> Tile_map,int width, int height, Vector2 res)
     {
-        //level_res = res;
-        //Debug.Log(res);
         Get_camsize(res);
         Set_cp();
+        GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Receive_Tilemap(Tile_map, width, height,interval,center_point);
+        //level_res = res;
+        //Debug.Log(res);
         //List<List<bool>> valid_space = new List<List<bool>>();
         bool check_marker = true;//false:B, true:A
         for(int i = 0; i < width; i++)
@@ -109,7 +110,8 @@ public class BackTile_drawer : MonoBehaviour {
                 }
                 else//기본 캔디 배치 및 배열 넘겨주기
                 {
-                    GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Dispense_one(tile_type, Get_tilepos(i, 0, Backtile_type), Get_tilepos(i, j, Backtile_type), interval,i,j);
+                    GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Dispense_one(tile_type, i, j, 0,queues);
+                    
                     //a_line_bool.Add()
                 }
             }
@@ -117,6 +119,11 @@ public class BackTile_drawer : MonoBehaviour {
         GameObject.Find("Level_manager").GetComponent<Level>().Set_interval(interval);
 
     }
+
+    //public Vector2 Get_Centerpoint()
+    //{
+
+    //}
 
 	// Update is called once per frame
 	void Update () {

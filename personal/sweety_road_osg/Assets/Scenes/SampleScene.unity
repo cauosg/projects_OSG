@@ -356,6 +356,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Interval: 0
+  BackTile_width: 0
+  BackTile_height: 0
+  valid_candies: 0200000003000000040000000500000006000000
 --- !u!4 &1685001688
 Transform:
   m_ObjectHideFlags: 0
