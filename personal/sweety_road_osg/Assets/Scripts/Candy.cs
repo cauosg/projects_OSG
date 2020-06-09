@@ -18,11 +18,11 @@ public class Candy : MonoBehaviour
     public float stay_range = 0.2f;
     public float change_spd = 1.0f;
     public float change_sensitivity = 4;
-
+    public float lerp_end_thres = 0.1f;
     public bool ready_to_bomb = false;// { get { return ready_to_bomb; } set { ready_to_bomb = value; } }
 
     private GameObject its_Candy;
-    private int this_type;
+    public int this_type;
     private bool is_lerp, update_neighbors, is_show, is_stop_anim, is_moved, allow_change, is_change, check_once, do_cancel, is_change_name = false;
     private float spd = 0.000f;
     private float Stop_anim_time = 0.00f;
@@ -41,7 +41,7 @@ public class Candy : MonoBehaviour
     //private bool[] movablity;
     private int ind_y, ind_x, width, height, next_x, next_y;
     private Vector2 begin_touch, end_touch, now_touch;
-    private Vector3 dest_pos, now_pos, other_pos, change_dir, back_pos;
+    private Vector3 dest_pos, now_pos, change_dir, back_pos;
     private int row_score, col_score;
     //private string[] other_neighbors;
     private List<Candy> my_powder;
@@ -84,11 +84,7 @@ public class Candy : MonoBehaviour
     private void OnMouseUp()
     {
         end_touch = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //if (!is_moved)
-        //    this.transform.position = now_pos;// new Vector3(now_pos.x, now_pos.y, zorder);
-
-        //if (Calc_length(begin_touch, end_touch) < 0.5 * interval)
-        //    return;
+       
         Calc_angle();
 
     }
@@ -96,10 +92,6 @@ public class Candy : MonoBehaviour
     private void OnMouseDrag()
     {
         now_touch = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //this.transform.position = new Vector3(now_touch.x, now_touch.y, zorder);
-        //Debug.Log(now_pos);
-        //Debug.Log(now_touch);
-
     }
     private float Calc_length(Vector2 a, Vector2 b)
     {
@@ -135,9 +127,7 @@ public class Candy : MonoBehaviour
             else
                 now_dir = dir_4.S;//Debug.Log("S");
         }
-        //Debug.Log(now_dir);
-        //Refresh_after_change();
-        //Refresh_neighbors();
+
         Request_change(now_dir);
     }
     //change next_x, next_y
@@ -190,75 +180,6 @@ public class Candy : MonoBehaviour
 
     }
 
-    private void Transforming(Vector3 his_pos, string his_name, int i, int j)//backup and change
-    {
-        //Debug.Log(gameObject.name + " s change is started, name to be changed is " + his_name);
-        //string temp = this.name;
-        //this.gameObject.name = his_name;
-        name_to_change = his_name;
-
-        //Debug.Log(gameObject.name + "'s nowpos is " + now_pos + " and other pos is " + other_candy.now_pos);
-        //name_to_change = other_candy.gameObject.name;
-        other_pos = his_pos;//other_candy.transform.position;
-        now_pos = this.transform.position;
-        //now_pos;
-        //back_pos = now_pos;
-
-        ////this.transform.position = other_pos;
-        int temp2 = ind_x;
-        ind_x = i;
-        next_x = temp2;
-        //next_x = other_candy.ind_x;
-        temp2 = ind_y;
-        ind_y = j;
-        next_y = temp2;
-        //next_y = other_candy.ind_y;
-    }
-
-    private void Transforming(Candy other_candy)//backup and change
-    {
-        //string temp = this.name;
-        //this.gameObject.name = other_candy.name;
-        name_to_change = other_candy.name;
-        //Debug.Log(gameObject.name + " s change is started, name to be changed is " + name_to_change);
-        //Debug.Log(gameObject.name + "'s nowpos is " + now_pos + " and other pos is " + other_candy.now_pos);
-        //name_to_change = other_candy.gameObject.name;
-        other_pos = other_candy.transform.position;//other_candy.transform.position;
-        now_pos = this.transform.position;
-        //now_pos;
-        //back_pos = now_pos;
-
-        ////this.transform.position = other_pos;
-        int temp2 = ind_x;
-        ind_x = other_candy.ind_x;
-        next_x = temp2;
-        //next_x = other_candy.ind_x;
-        temp2 = ind_y;
-        ind_y = other_candy.ind_y;
-        next_y = temp2;
-        //next_y = other_candy.ind_y;
-    }
-
-    private void Cancel_change()
-    {
-        do_cancel = false;
-        Debug.Log(gameObject.name + " s cancel is started, name to be changed is " + name_to_change);
-        //this.gameObject.name = name_to_change;
-        //now_pos = other_pos;
-        name_to_change = null;
-        Vector3 temp = other_pos;
-        other_pos = now_pos;
-        now_pos = temp;
-        ind_x = next_x;
-        ind_y = next_y;
-        my_powder.Clear();
-        //is_cancel = true;
-        is_change = false;
-
-        Begin_Lerp_change();
-        
-    }
-
     private bool Is_on_proc()
     {
         bool out_bool = false;
@@ -269,18 +190,55 @@ public class Candy : MonoBehaviour
         return out_bool;
     }
 
+    private void Transforming(Candy other_candy)//backup and change
+    {
+         name_to_change = other_candy.name;
+        //name_to_change = this.gameObject.name;
+        //this.gameObject.name = other_candy.name;
+
+        dest_pos = other_candy.transform.position;//other_candy.transform.position;
+        //Debug.Log(this.transform.position);
+        now_pos = this.transform.position;
+
+        //int temp2 = ind_x;
+        //ind_x = other_candy.ind_x;
+        //next_x = temp2;
+        next_x = other_candy.ind_x;
+        //temp2 = ind_y;
+        //ind_y = other_candy.ind_y;
+        //next_y = temp2;
+        next_y = other_candy.ind_y;
+    }
+    private void Cancel_change()
+    {
+        do_cancel = false;
+        //Debug.Log(gameObject.name + " s cancel is started, name to be changed is " + name_to_change);
+        //this.transform.name = name_to_change;
+        name_to_change = null;
+        //Debug.Log(now_pos);
+        Vector3 temp = now_pos;
+        now_pos = dest_pos;
+        dest_pos = temp;
+
+        //Debug.Log(now_pos);
+        //Debug.Log(dest_pos);
+        //ind_x = next_x;
+        //ind_y = next_y;
+
+        next_x = ind_x;
+        next_y = ind_y;
+
+        my_powder.Clear();
+
+        Begin_Lerp_change();
+    }
+
     private void Refresh_after_change()
     {
         //Debug.Log("cancel or not of " + this.gameObject.name + " is " + do_cancel); 
-        if (!Is_on_proc())
-            return;
-        is_change = false;//?
-        //this.gameObject.name = name_to_change;
-        //this.transform.position = other_pos;
-        //Vector3 temp = now_pos;
-        //back_pos = now_pos;
-        //now_pos = other_pos;
-        //this.transform.position = now_pos;
+        //if (!Is_on_proc())
+        //    return;
+        //is_change = false;//?
 
         if (name_to_change != null)
         {
@@ -288,8 +246,18 @@ public class Candy : MonoBehaviour
             name_to_change = null;
         }
         back_pos = this.transform.position;
+
+        ind_x = next_x;
+        ind_y = next_y;
+
+        //if (ready_to_bomb)
+        //    Fire();
+        //if (!ready_to_bomb)
+        //    my_powder.Clear();
+        my_powder.Clear();
         Refresh_neighbors();
-        
+        //Debug.Log(gameObject.name + " s ind : [" + ind_x + "][" + ind_y + "]");
+
         Check_score();
         //is_cancel = false;
 
@@ -299,27 +267,28 @@ public class Candy : MonoBehaviour
     private void Begin_Lerp_change()
     {
         //Debug.Log("Lerp move is begin at " + this.gameObject.name);
-        change_dir = other_pos - now_pos;
+        change_dir = dest_pos - now_pos;
+        //Debug.Log(gameObject.name + "'s others position is" + dest_pos);
+        //Debug.Log(gameObject.name + "'s now position is" + now_pos);
+        //Debug.Log(gameObject.name + "'s position is" + this.transform.position);
         is_change = true;
     }
 
     private void Lerp_change()
     {
         this.transform.Translate(change_dir * Time.deltaTime * change_spd);
-        //Debug.Log(this.transform.position);
-        Change_is_drop(true);
-        if ((this.transform.position - other_pos).magnitude < 0.1f)
+        //Debug.Log(this.gameObject.name + " is changing");
+        //Change_is_drop(true);
+        if ((this.transform.position - dest_pos).magnitude < lerp_end_thres)
         {
-            this.transform.position = other_pos;
+            //Debug.Log(gameObject.name + "'s lerp is end");
+            is_change = false;
+            this.transform.position = dest_pos;
 
             if (do_cancel)
-            {
                 Cancel_change();
-                return;
-            }
-            //is_cancel = false;
-            Refresh_after_change();
-
+            else
+                Refresh_after_change(); 
         }
     }
 
@@ -328,7 +297,7 @@ public class Candy : MonoBehaviour
         //
         //GameObject temp = GameObject.Find(neighbors[(int)now_dir]);
         int now_ind = (int)now_dir;
-
+        Refresh_neighbors();
         //for(int i = 0; i< 4; i++)
         //{
         //    Debug.Log(neighbors[i]);
@@ -340,73 +309,58 @@ public class Candy : MonoBehaviour
             return;
         }
         Candy to_memorize = neighbors[now_ind];
-
-        //Vector3 his_pos = neighbors[now_ind].transform.position;
-        //string his_name = neighbors[now_ind].gameObject.name;
-        
-        //int his_x = neighbors[now_ind].ind_x;
-        //int his_y = neighbors[now_ind].ind_y;
+        to_memorize.Refresh_neighbors();
+        //Debug.Log(to_memorize.name);
 
         Candy[] other_neighbors = neighbors[now_ind].neighbors;
         other_neighbors[(int)Opposite_dir(direction)] = neighbors[now_ind];//바꼈을때 상황 적용
-        //Candy temp = neighbors[now_ind];
-        //bool check_valid = neighbors[now_ind].Response_change(this, direction);
-        
-        if (Check_score(other_neighbors) || neighbors[now_ind].Response_change(this, direction))
+
+        bool temp = neighbors[now_ind].Response_change(this, direction);
+        if (Check_score(other_neighbors,to_memorize) || temp)
             do_cancel = false;
         else
-        {
             do_cancel = true;
-            //neighbors[now_ind].do_cancel = true ;
-            neighbors[now_ind].Response_cancel(this);
-        }
-        neighbors[now_ind].do_cancel = this.do_cancel;
 
-        //neighbors[now_ind].Begin_Lerp_change();
-        //if(!do_cancel)
-        //    neighbors[now_ind].Response_cancel(this);
+
         //Debug.Log(do_cancel);
+        //Debug.Log(to_memorize.name);
+        to_memorize.do_cancel = do_cancel;
 
         Transforming(to_memorize);
 
-        //if (do_cancel)
-        //    neighbors[now_ind].Response_cancel(this);
-        //Translate_index(direction);
-
         Begin_Lerp_change();
-
         //Debug.Log(this.gameObject.name + " will be changed");
     }
 
     public bool Response_change(Candy other_candy, dir_4 direction)//바꿔도 되는지 응답,이전 멤버 명칭 포함
     {
+        //Refresh_neighbors();
         Candy to_memorize = other_candy;
-        Transforming(to_memorize);
-        Begin_Lerp_change();
-        //Transforming(other_candy);
 
         Candy[] other_neighbors = other_candy.neighbors;
         //Debug.Log(other_candy.transform.position);
         other_neighbors[(int)direction] = other_candy;//바꼈을때 상황 적용
 
-        bool out_bool = Check_score(other_neighbors);
+        bool out_bool = Check_score(other_neighbors, other_candy);
 
-        //Debug.Log(gameObject.name + " is got respond");
-        ////other_pos = my_pos;
+        Transforming(to_memorize);
+        Begin_Lerp_change();
 
         return out_bool;
     }
 
-    public void Response_cancel(Candy other_candy)//바꿔도 되는지 응답,이전 멤버 명칭 포함
+    public void Response_cancel(bool bool_cancel)//바꿔도 되는지 응답,이전 멤버 명칭 포함
     {
-        Transforming(other_candy);
+        if (!do_cancel)
+            return;
+        this.do_cancel = bool_cancel;
+
         Debug.Log(gameObject.name + " is got respond");
-        //other_pos = my_pos;
-        Begin_Lerp_change();
+
+        Cancel_change();
     }
 
-
-
+  
 
 
     public void Move_to_new(int i, int j, Vector3 term_pos, int steps)
@@ -416,6 +370,11 @@ public class Candy : MonoBehaviour
         gameObject.name = Name_translate(i, j);
         ind_x = i;
         ind_y = j;
+        Refresh_neighbors();
+        //name_to_change = Name_translate(i, j);
+        //next_x = i;
+        //next_y = j;
+
     }
 
 
@@ -424,28 +383,30 @@ public class Candy : MonoBehaviour
         Change_is_drop(true);
         if (Stop_anim_time > Stop_anim_length)
         {
+            Stop_anim_time = 0.00f;
             is_stop_anim = false;
             Change_is_drop(false);
+            //Refresh_neighbors();
+            Check_score();//Refresh_after_change();
         }
         Stop_anim_time += Time.deltaTime;
         its_Candy.transform.localScale = new Vector2(1 + Stop_anim_power * Mathf.Sin(Mathf.PI / 2 * Stop_anim_spd * Stop_anim_time),
             1 - Stop_anim_power * Mathf.Sin(Mathf.PI / 2 * Stop_anim_spd * Stop_anim_time)) * scale_factor;
         //Debug.Log(this.transform.position);
-        its_Candy.transform.position = this.transform.position - new Vector3(0, scale_factor - its_Candy.transform.localScale.y, 0);//new Vector3(now_pos.x,now_pos.y,zorder) - new Vector3(0,scale_factor - its_Candy.transform.localScale.y,0);
+        its_Candy.transform.position = this.transform.position - new Vector3(0, scale_factor - its_Candy.transform.localScale.y, 0);
 
-        //Debug.Log(scale_factor);
-        //Debug.Log(transform.localScale.y);
     }
     private void End_lerp()
     {
-
+       // Debug.Log(gameObject.name + "' s lerp_end");
         spd = 0.000f;
         is_lerp = false;
         this.back_pos = dest_pos;
         this.transform.position = dest_pos;
         is_stop_anim = true;
 
-        Refresh_neighbors();
+        //Refresh_neighbors();
+        //Refresh_after_change();
         //dispenser.is_update = true;
     }
 
@@ -457,7 +418,7 @@ public class Candy : MonoBehaviour
     }
     private void Lerp_move()
     {
-        Change_is_drop(true);
+        //Change_is_drop(true);
         //Debug.Log("im moving now....");
         spd += accel_factor * Time.deltaTime;
         if (spd > max_spd)
@@ -465,7 +426,7 @@ public class Candy : MonoBehaviour
 
         this.transform.Translate(new Vector2(0, -spd));
         //Debug.Log(this.transform.position);
-        if (this.transform.position.y <= dest_pos.y + 0.1f)
+        if ((this.transform.position - dest_pos).magnitude < lerp_end_thres)
             End_lerp();
         if (!is_show && this.transform.position.y < back_pos.y)
             its_Candy.GetComponent<SpriteRenderer>().enabled = true;
@@ -478,6 +439,7 @@ public class Candy : MonoBehaviour
         this.dest_pos = new Vector3(target_pos.x, target_pos.y, zorder);
         this.transform.position = dest_pos + new Vector3(0, qs * interval, 0);
         this.is_lerp = true;
+        //Debug.Log("drop");
     }
 
     private string Name_translate(int i, int j)
@@ -504,7 +466,7 @@ public class Candy : MonoBehaviour
 
         its_Candy = Instantiate(Candies[this_type], new Vector3(0,0,0), Quaternion.identity) as GameObject;
         back_pos = this.transform.position;
-        //other_pos = now_pos;
+
         scale_factor = interval / its_Candy.GetComponent<SpriteRenderer>().bounds.size.x;
         its_Candy.transform.localScale = new Vector3(scale_factor, scale_factor, scale_factor);
         its_Candy.transform.SetParent(this.transform);
@@ -519,14 +481,11 @@ public class Candy : MonoBehaviour
     {
         if (my_powder.Contains(item))
             return;
-        if (my_powder.Contains(item))
-            return;
-
         my_powder.Add(item);
     }
 
 
-    private void bullet_load_self()
+    private void bullet_send()
     {
         //if (!dispenser.powders.Contains(item))
         //    dispenser.powders.Add(item);
@@ -541,8 +500,9 @@ public class Candy : MonoBehaviour
 
     private void Fire()
     {
+        //Debug.Log(this.gameObject.name + " got fired");
         bullet_load(this);
-        bullet_load_self();
+        bullet_send();
         dispenser.Explode_candies();
         my_powder.Clear();
         ready_to_bomb = false;
@@ -550,6 +510,7 @@ public class Candy : MonoBehaviour
 
     private bool Check_Candy_ball()
     {
+        Refresh_neighbors();
         bool[] same_hood = new bool[4];
         //for (int i = 0; i < 4; i++)
         //    same_hood[i] = false;
@@ -569,26 +530,9 @@ public class Candy : MonoBehaviour
         }
         bool checker = false;
 
-        //int diag_y = -1;//2x2중 ㄹ자 포함시키지 않으므로 제외
-        //int diag_x = -1;
-
-        //if (same_hood[0])
-        //    diag_y = ind_y - 1;
-        //else if (same_hood[1])
-        //    diag_y = ind_y + 1;
-        //if (same_hood[2])
-        //    diag_x = ind_x + 1;
-        //else if (same_hood[3])
-        //    diag_x = ind_x - 1;
-
-        //if (diag_x > -1 && diag_y > -1)
-        //{
-        //GameObject temp = GameObject.Find(Name_translate(diag_x, diag_y));
-        //if (temp != null)
-        //    checker = temp.GetComponent<Candy>().Are_u_same(this_type);
-        //}
-        
+        //2x2중 ㄹ자 포함시키지 않으므로 제외
         //정확히 2x2만을 탐색
+        
         if (same_hood[0] && same_hood[2])
         {
             GameObject temp = GameObject.Find(Name_translate(ind_x - 1, ind_y - 1));
@@ -614,15 +558,87 @@ public class Candy : MonoBehaviour
                 checker = temp.GetComponent<Candy>().Are_u_same(this_type);
         }
         if (checker)
+        {
             Check_connected();
+            //Debug.Log(gameObject.name + " s ind : [" + ind_x + "][" + ind_y + "]");
+        }
         //Debug.Log(checker);
         return checker;
+    }
+
+    private bool Check_Candy_ball(Candy[] others_hood,Candy other)
+    {
+        //Refresh_neighbors();
+        bool[] same_hood = new bool[4];
+        //for (int i = 0; i < 4; i++)
+        //    same_hood[i] = false;
+        //Candy[] same_candies = new Candy[4];
+
+        for (int i = 0; i < 4; i++)
+        {
+            same_hood[i] = false;
+            //GameObject neighbor_candy = GameObject.Find(neighbors[i]);
+            if (others_hood[i] == null)
+                continue;
+
+            if (!others_hood[i].GetComponent<Candy>().Are_u_same(this_type))
+                continue;
+            same_hood[i] = true;
+            //Debug.Log(gameObject.name + "'s neighbor of " + (dir_4)i + " is same");
+            //same_candies[i] = neighbors[i].GetComponent<Candy>();
+        }
+        bool checker = false;
+
+        //2x2중 ㄹ자 포함시키지 않으므로 제외
+        //정확히 2x2만을 탐색
+
+        if (same_hood[0] && same_hood[2])
+        {
+            GameObject temp = GameObject.Find(Name_translate(other.ind_x - 1, other.ind_y - 1));
+            if (temp != null)
+                checker = temp.GetComponent<Candy>().Are_u_same(this_type);
+        }
+        if (same_hood[0] && same_hood[3])
+        {
+            GameObject temp = GameObject.Find(Name_translate(other.ind_x + 1, other.ind_y - 1));
+            if (temp != null)
+                checker = temp.GetComponent<Candy>().Are_u_same(this_type);
+        }
+        if (same_hood[1] && same_hood[2])
+        {
+            GameObject temp = GameObject.Find(Name_translate(other.ind_x - 1, other.ind_y + 1));
+            if (temp != null)
+                checker = temp.GetComponent<Candy>().Are_u_same(this_type);
+        }
+        if (same_hood[1] && same_hood[3])
+        {
+            GameObject temp = GameObject.Find(Name_translate(other.ind_x + 1, other.ind_y + 1));
+            if (temp != null)
+                checker = temp.GetComponent<Candy>().Are_u_same(this_type);
+        }
+        //if (checker)
+        //{
+        //    Check_connected();
+        //    Debug.Log(gameObject.name + " s ind : [" + other.ind_x + "][" + other.ind_y + "]");
+        //}
+        //Debug.Log(checker);
+        return checker;
+    }
+
+    private void Check_connected()
+    {
+        Check_all_dir(ref my_powder);
+
+        //Debug.Log("candy_ball is made by " + this.gameObject.name);
+        //for (int i = 0; i < my_powder.Count; i++)
+        //    Debug.Log("Candy ball elem of " + this.gameObject.name + " is " + my_powder[i].name + " and type is " + my_powder[i].this_type);
+        Fire();
     }
 
     public bool Check_all_dir(ref List<Candy> parent_powder)//,override, Candyball check만을 위함
     {
         //Debug.Log("myname is " + gameObject.name + " and other : " + except_name);
-        //Refresh_neighbors();
+        Refresh_neighbors();
         int same_count = 0;//stackoverflow 방지
 
         for (int i = 0; i < 4; i++)
@@ -645,22 +661,28 @@ public class Candy : MonoBehaviour
 
     public bool Check_all_dir(ref int row_score, ref int col_score)//,override
     {
-        //Refresh_neighbors();
+        Refresh_neighbors();
         for (int i = 0; i < 4; i++)
         {
             //Debug.Log(neighbors[i]);
             //GameObject neighbor_candy = GameObject.Find(neighbors[i]);
             if (neighbors[i] == null)
                 continue;
-
+             if (my_powder.Contains(neighbors[i]))//feedback방지
+                continue;
+            //if (neighbors[i].gameObject.name == this.gameObject.name)//feedback방지
+            //    continue;
             //Debug.Log(this.gameObject.name + "candy will check " + neighbors[i]);
 
             if (!neighbors[i].Are_u_same(this_type))
                 continue;
 
-            //Debug.Log(this.gameObject.name + "is same with  " + neighbor_candy.GetComponent<Candy>().gameObject.name + "by " + (dir_4)i);
-            dispenser.powders.Add(neighbors[i]);
-            
+            //Debug.Log(this.gameObject.name + "is same with  " + neighbors[i].gameObject.name + "by " + (dir_4)i);
+
+            //if (!my_powder.Contains(neighbors[i]))
+                my_powder.Add(neighbors[i]);
+            //dispenser.powders.Add(neighbors[i]);
+
 
             if (i > 1)
                 row_score++;
@@ -674,6 +696,11 @@ public class Candy : MonoBehaviour
 
     public bool Check_all_dir(Candy[] other_neighbors, ref int row_score, ref int col_score)//,override
     {
+        //for (int i = 0; i < 4; i++)
+        //    if (other_neighbors[i] != null)
+        //        Debug.Log(this.gameObject.name + " 's neibor of dir " + (dir_4)i + " is " + other_neighbors[i].name);
+
+
         for (int i = 0; i < 4; i++)
         {
             //GameObject neighbor_candy = GameObject.Find(other_candy.other_neighbors[i]);
@@ -684,6 +711,7 @@ public class Candy : MonoBehaviour
             if (!other_neighbors[i].Are_u_same(this_type))
                 continue;
 
+            //Debug.Log(this.gameObject.name + " 'is same with by" + (dir_4)i + " to " + other_neighbors[i].name);
             my_powder.Add(other_neighbors[i]);
 
             if (i > 1)
@@ -735,48 +763,52 @@ public class Candy : MonoBehaviour
 
     }
 
-    private void Check_connected()
+
+
+    private void Check_score()
     {
-        Check_all_dir(ref my_powder);
-
-        Debug.Log("candy_ball is made by " + this.gameObject.name);
-        bullet_load(this);
-        bullet_load_self();
-        dispenser.Explode_candies();
-
         my_powder.Clear();
-    }
 
-        private void Check_score()
-    {
+        Refresh_neighbors();
         row_score = 1;
         col_score = 1;
-        if (Check_Candy_ball())
-            row_score = 999;
-        else
-            Check_all_dir(ref row_score, ref col_score);
 
-        Debug.Log(gameObject.name + "'s row_score:" + row_score + ", col_score: " + col_score);// +  "i+1 : " + (dir_4)(1 + 2));
+        if (!Check_Candy_ball())
+            Check_all_dir(ref row_score, ref col_score);
+        else
+            return;
+
+        //if (Check_Candy_ball())
+        //    row_score = 999;
+        //else
+        //    Check_all_dir(ref row_score, ref col_score);
+
+        //Debug.Log(gameObject.name + "'s row_score:" + row_score + ", col_score: " + col_score);// +  "i+1 : " + (dir_4)(1 + 2));
 
         if (row_score > 2 || col_score > 2)
         {
-            bullet_trigger();
+            Fire();
         }
     }
 
-    private bool Check_score(Candy[] other_neighbors)//swipe 검사하기 위해 override
+    private bool Check_score(Candy[] other_neighbors, Candy other)//swipe 검사하기 위해 override
     {
+        my_powder.Clear();
         //Refresh_neighbors();
 
         row_score = 1;
         col_score = 1;
-        Check_all_dir(other_neighbors, ref row_score, ref col_score);
+        if (!Check_Candy_ball(other_neighbors,  other))
+            Check_all_dir(other_neighbors, ref row_score, ref col_score);
+        else
+            return true;
+       
 
         Debug.Log(gameObject.name + "'s row_score:" + row_score + ", col_score: " + col_score);// +  "i+1 : " + (dir_4)(1 + 2));
 
         if (row_score > 2 || col_score > 2)
         {
-            bullet_trigger();
+            //bullet_trigger();
             return true;
         }
         return false;
@@ -785,27 +817,25 @@ public class Candy : MonoBehaviour
 
     public void Bomb()
     {
-        dispenser.Refill_plz(ind_x, ind_y);
-        Debug.Log("candy " + gameObject.name + "requested refill");
+        dispenser.Refill_plz(this);
+        //Debug.Log("candy " + gameObject.name + "requested refill");
         Destroy(this.gameObject);
     }
 
 
-    private void Refresh_neighbors()
+    public void Refresh_neighbors()
     {
         //movablity = new bool[4];
 
-        if (ready_to_bomb)
-        {
-            Fire();
-            ready_to_bomb = false;
-        }
+        //if (ready_to_bomb)
+        //{
+        //    Fire();
+        //    ready_to_bomb = false;
+        //}
 
 
         neighbors = new Candy[4];
-        //string name_find = "Candy[" + ind_x + "][" + (ind_y - 1) + "]";
-        //if (GameObject.Find("Candy[" + ind_x + "][" + (ind_y - 1) + "]") != null)//N
-        //N
+
         string now_name = Name_translate(ind_x, ind_y - 1);
         GameObject temp = GameObject.Find(now_name);
         if (temp != null)//N
@@ -835,18 +865,13 @@ public class Candy : MonoBehaviour
         else
             neighbors[3] = null;
 
+        //for (int i = 0; i < 4; i++)
+        //    if (neighbors[i] != null)
+        //        Debug.Log(this.gameObject.name + " 's neibor of dir " + (dir_4)i + " is " + neighbors[i].name);
+
         //bullet_powder.Clear();
     }
 
-    //public Vector2 Get_pos()
-    //{
-    //    return now_pos;
-    //}
-    public Vector3 Get_pos()
-    {
-        return now_pos;
-        //return this.transform.position;
-    }
 
     public int Get_ind_x()
     {
@@ -875,12 +900,17 @@ public class Candy : MonoBehaviour
             Stop_anim();
         if (is_change)
             Lerp_change();
+        if (!dispenser.is_drop)
+        {
+            Refresh_neighbors();
+            //Check_score();
+        }
         //if (ready_to_bomb)
         //    ready_to_bomb = false;
-        if (dispenser.is_update)
-        {
-            //Debug.Log("now_checking");
-            Refresh_neighbors();
-        }
+        //if (dispenser.is_update)
+        //{
+        //    //Debug.Log("now_checking");
+        //    Refresh_neighbors();
+        //}
     }
 }

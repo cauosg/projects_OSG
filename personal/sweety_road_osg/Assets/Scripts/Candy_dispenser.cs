@@ -12,8 +12,11 @@ public class Candy_dispenser : MonoBehaviour {
     public bool is_move = false;
     public bool fired = false;
     public List<Candy> powders;
+    public List<List <Candy>> explode_queue;
+    private List<int> scores_queue;
 
     private List<List<int>> Tile_map,empty_pos;
+    private List<string> dispense_candies_names;
     private int width, height;
     private int[] pos_ind, valid_candies;
 
@@ -35,7 +38,7 @@ public class Candy_dispenser : MonoBehaviour {
     void Start () {
         dispense_pos = new List<int>();
         dispense_candies = new List<int>();
-
+        dispense_candies_names = new List<string>();
         empty_pos = new List<List<int>>();
 
         pos_ind = new int[2];
@@ -68,6 +71,7 @@ public class Candy_dispenser : MonoBehaviour {
     {
         
         empty_pos.Clear();
+        dispense_candies_names.Clear();
         //Debug.Log("ep count of " + 0 + " is " + empty_pos.Count);
         // for(int i = 0; i< empty_pos[i].Count;i++)
         //  Debug.Log("ep count of " + i + " is " + empty_pos[i].Count);
@@ -137,22 +141,34 @@ public class Candy_dispenser : MonoBehaviour {
 
         return new Vector3(x_pos, y_pos, zorder);
     }
-    public void Refill_plz(int i, int j)
+    public void Refill_plz(Candy in_candy)
     {
-        dispense_candies[i]++;
+        if (dispense_candies_names.Contains(in_candy.name))
+            return;
+
+        dispense_candies_names.Add(in_candy.name);
+
+        dispense_candies[in_candy.Get_ind_x()]++;
         //Debug.Log(empty_pos.Count);
-        empty_pos[i].Add(j);
+        empty_pos[in_candy.Get_ind_x()].Add(in_candy.Get_ind_y());
         //Debug.Log("Candy Refill is requested at [" + i + "][" + j + "]");
     }
 
+
+
     public void Explode_candies()
     {
+        List<string> broken_candies = new List<string>();
         for (int i = 0; i< powders.Count; i++)
         {
-            Debug.Log("Candy will destroyed is " + powders[i].gameObject.name);
-            powders[i].Bomb();
+            //Debug.Log("Candy will destroyed is " + powders[i].gameObject.name);
+            if (broken_candies.Contains(powders[i].name))
+                continue;
+            broken_candies.Add(powders[i].gameObject.name);
+            powders[i].Bomb();            
         }
         powders.Clear();
+        //Reset_fills();
     }
 
     public void Candy_drop()

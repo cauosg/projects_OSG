@@ -70,7 +70,7 @@ MonoBehaviour:
   m_MinSize: {x: 206, y: 121}
   m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 13
+  controlID: 48
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -163,8 +163,8 @@ MonoBehaviour:
     y: 0
     width: 1108
     height: 398
-  m_MinSize: {x: 102, y: 121}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 19}
@@ -302,8 +302,8 @@ MonoBehaviour:
     y: 0
     width: 1093
     height: 549
-  m_MinSize: {x: 204, y: 221}
-  m_MaxSize: {x: 4004, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 22}
   m_Panes:
   - {fileID: 22}
@@ -477,10 +477,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 212
-    y: 100
-    width: 706
-    height: 751
+    x: -1607
+    y: 338
+    width: 1089
+    height: 528
   m_PersistentViewDataDictionary: {fileID: 0}
 --- !u!114 &18
 MonoBehaviour:
@@ -793,23 +793,23 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: c664edff
-    m_LastClickedID: -1219386
-    m_ExpandedIDs: ce37f5ffae65f9ff4667f9ff2c01faff6049fcff7449fcff6e67fcff8267fcff9667fcffe4fbffff00000000002d0000
+    m_SelectedIDs: 6815fbff
+    m_LastClickedID: -322200
+    m_ExpandedIDs: 7015fbff2018fbff6ce4feffe4fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Candy[7][7]
-      m_OriginalName: Candy[7][7]
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: -1219570
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 6}
     m_SearchString: 
@@ -845,14 +845,14 @@ MonoBehaviour:
     height: 528
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneLighting: 1
-  lastFramingTime: 30776.9577921
+  lastFramingTime: 1843.8938254999998
   m_2DMode: 1
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 2.025, y: -4.55625, z: -0.19999999}
+    m_Target: {x: 4.0348315, y: -2.2107487, z: -0.2734375}
     speed: 2
-    m_Value: {x: 2.025, y: -4.55625, z: -0.19999999}
+    m_Value: {x: 4.0348315, y: -2.2107487, z: -0.2734375}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -884,15 +884,15 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 2.8578837
+    m_Target: 10.242759
     speed: 2
-    m_Value: 2.8578837
+    m_Value: 10.242759
   m_Ortho:
     m_Target: 1
     speed: 2
     m_Value: 1
   m_ShowGlobalGrid: 1
-  m_LastSceneViewRotation: {x: 0.03263028, y: 0.057534274, z: 0.0018815448, w: -0.9978084}
+  m_LastSceneViewRotation: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
   m_LastSceneViewOrtho: 0
   m_ReplacementShader: {fileID: 0}
   m_ReplacementString: 
