@@ -11,7 +11,7 @@ public class Candy_dispenser : MonoBehaviour {
     public bool is_update = false;
     public bool is_move = false;
     public bool fired = false;
-    public List<string> powders;
+    public List<Candy> powders;
 
     private List<List<int>> Tile_map,empty_pos;
     private int width, height;
@@ -68,12 +68,16 @@ public class Candy_dispenser : MonoBehaviour {
     {
         
         empty_pos.Clear();
+        //Debug.Log("ep count of " + 0 + " is " + empty_pos.Count);
+        // for(int i = 0; i< empty_pos[i].Count;i++)
+        //  Debug.Log("ep count of " + i + " is " + empty_pos[i].Count);
         dispense_candies.Clear();
         for (int i = 0; i < width; i++)
         {
             dispense_candies.Add(0);
             empty_pos.Add(new List<int>());
         }
+       
     }
 
     public void Dispense_pos()
@@ -96,22 +100,22 @@ public class Candy_dispenser : MonoBehaviour {
         Debug.Log(dispense_candies.Count);
     }
 
-    public void Dispense()
-    {
-        for (int i = 0; i < width; i++)
-        {
-            List<int> Temp = new List<int>();
-            Temp.Add(0);
-            empty_pos.Add(Temp);
-            for (int j = 0; j < height; j++)
-            {
+    //public void Dispense()
+    //{
+    //    for (int i = 0; i < width; i++)
+    //    {
+    //        List<int> Temp = new List<int>();
+    //        Temp.Add(0);
+    //        empty_pos.Add(Temp);
+    //        for (int j = 0; j < height; j++)
+    //        {
 
-                int candy_type = Tile_map[i][j];//transpose
-                if (candy_type < 2)
-                    continue;
-            }
-        }
-    }
+    //            int candy_type = Tile_map[i][j];//transpose
+    //            if (candy_type < 2)
+    //                continue;
+    //        }
+    //    }
+    //}
 
     public void Dispense_one(int candy_type, int i, int j, int origin, int ques)
     {
@@ -145,7 +149,8 @@ public class Candy_dispenser : MonoBehaviour {
     {
         for (int i = 0; i< powders.Count; i++)
         {
-            GameObject.Find(powders[i]).GetComponent<Candy>().Bomb();
+            Debug.Log("Candy will destroyed is " + powders[i].gameObject.name);
+            powders[i].Bomb();
         }
         powders.Clear();
     }
@@ -154,15 +159,18 @@ public class Candy_dispenser : MonoBehaviour {
     {
         if (is_drop)
             return;
-
+        //for (int i = 0; i < empty_pos.Count; i++)
+        //    Debug.Log("ep count of " + i + " is " + empty_pos[i].Count);
         for (int i = 0; i<width; i++)//width : 9, candy는 1~8
         {
             //Debug.Log("dispense candies : " + dispense_candies[i]);
             if (dispense_candies[i] < 1)
                 continue;
+            
             int[] move_steps = new int[height];
 
             int max_pos = 0;
+            //Debug.Log("ep count of " + i + " is " + empty_pos[i].Count);
             for (int j = 0; j < empty_pos[i].Count; j++)
             {
                 for (int k = 0; k < empty_pos[i][j]; k++)

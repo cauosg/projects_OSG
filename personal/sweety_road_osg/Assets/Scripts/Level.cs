@@ -39,7 +39,7 @@ public class Level : MonoBehaviour {
         GameObject.Find("BackTile_drawer").GetComponent<BackTile_drawer>().Draw_BackTile(Tile_map,BackTile_width,BackTile_height,level_res);
         //GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Init();
         //GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Receive_Tilemap(Tile_map, BackTile_width, BackTile_height);
-        GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Dispense_pos();
+        //GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Dispense_pos();
     }
 
     //-----stack overflow 이유 추후 찾아보기
