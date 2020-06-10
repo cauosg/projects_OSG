@@ -53,6 +53,7 @@ public class Candy : MonoBehaviour
     //private int row_score, col_score;
     //private string[] other_neighbors;
     private List<Candy> my_powder;
+    private Candy other;
     //private List<string> bullet_powder;
     /*
      * type :
@@ -88,8 +89,7 @@ public class Candy : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Debug.Log(this.gameObject.name);
-        //Debug.Log("x:" + ind_x + ", y:" + ind_y);
+        //Debug.Log(this.gameObject.name);
 
         begin_touch = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
@@ -113,8 +113,8 @@ public class Candy : MonoBehaviour
 
     private bool Check_additinal(List<Candy> rows, List<Candy> cols)//특수블록 생성, 각각 우선순위 고려할것
     {
-        Debug.Log("row score is :" + rows.Count);
-        Debug.Log("col score is :" + cols.Count);
+        //Debug.Log("row score is :" + rows.Count);
+        //Debug.Log("col score is :" + cols.Count);
 
         if(rows.Count > 3 || cols.Count > 3)
         {
@@ -159,38 +159,68 @@ public class Candy : MonoBehaviour
         //}
     }
 
-    private void Rainbow_bomb(Candy other)
+    private void Rainbow_bomb()//무지개 블록 폭발 및 영향
     {
         types bomb_type = other.this_type;
         additional other_addy = other.addy;
-
+        //List<Candy> bomb_candies = new List<Candy>();
         for(int i = 0;i<width; i++)
             for(int j = 0; j<height; j++)
             {
+                GameObject temp = GameObject.Find(Name_translate(i, j));
+                if (temp == null)
+                    continue;
+                if (i == ind_x && j == ind_y)//feedback 방지
+                    continue;
 
+                Candy temp_candy = temp.GetComponent<Candy>();
+
+                if (bomb_type == types.Rainbow)
+                {
+                    my_powder.Add(temp_candy);
+                    continue;
+                }
+
+                if (temp_candy.Are_u_same(bomb_type))//같은색을 모두 특수 블록으로
+                {
+                    if((int)temp_candy.addy < 1 && (int)other_addy > 0)
+                        temp_candy.Specialize(other_addy);
+                    Add_candy(ref my_powder, temp_candy);//my_powder.Add(temp_candy);
+                }
             }
+        Fire(my_powder.Count);
+        //for (int i = 0; i<bomb_candies.Count; i++)
+
     }
-    public void Rainbow(dir_4 direction)
+    public void Rainbow(dir_4 direction)//무지개 블록 작동
     {
         int now_ind = (int)direction;
         Refresh_neighbors();
 
-        if (neighbors[now_ind] == null)// || !movablity[(int)direction])
+        if (neighbors[now_ind] == null)
         {
-            Debug.Log(direction + ", theres no neighbor");
+            //Debug.Log(direction + ", theres no neighbor");
             return;
         }
-        Candy to_memorize = neighbors[now_ind];
+        other = neighbors[now_ind];
         
-        Transforming(to_memorize);
+        Transforming(other);
 
         Begin_Lerp_change();
         //Debug.Log(this.gameObject.name + " will be changed");
     }
 
-    public void Ballize()//먼치킨으로 변환
+    public void Rainbow_form()//본인을 무지개캔디로 변환
     {
-        Debug.Log(this.gameObject.name + " is ballized"); ;
+        this_type = types.Rainbow;
+
+        Destroy(its_Candy);
+        its_Candy = Inst_candy(Specials[(int)Special_list.Rainbow], zorder,ref scale_factor);
+    }
+
+    public void Ballize()//본인을 먼치킨으로 변환
+    {
+        //Debug.Log(this.gameObject.name + " is ballized"); ;
         //its_Special = Inst_ball(zorder);
         its_Special = Instantiate(Specials[(int)Special_list.Ball], this.transform.position, Quaternion.identity) as GameObject;
 
@@ -204,15 +234,15 @@ public class Candy : MonoBehaviour
         //Destroy(its_Candy);
     }
 
-    public void destroy_by_ball(int break_order)
+    public void destroy_by_ball(int break_order)//먼치킨 블록에 치이는것
     {
         dispenser.Refill_plz(this);
-        Debug.Log(gameObject.name + " is waitting ball");
+        //Debug.Log(gameObject.name + " is waitting ball");
         wait_time = break_order;
         is_wait = true;
     }
 
-    private void visible_by_time()
+    private void visible_by_time()//먼치킨 블록에 의해 차례대로 사라짐 구현
     {
         wait_time -= Time.deltaTime * roll_spd;
         if(wait_time<0)
@@ -222,7 +252,7 @@ public class Candy : MonoBehaviour
         }
     }
 
-    private void ball_move()
+    private void ball_move()//먼치킨 블록의 트랜스포밍
     {
         this.transform.Translate(roll_dir * Time.deltaTime * roll_spd);
         its_Special.transform.Rotate(roll_axis, Time.deltaTime * roll_spd);
@@ -234,9 +264,9 @@ public class Candy : MonoBehaviour
         }
     }
 
-    public void ball_break(dir_4 in_dir)
+    public void ball_break(dir_4 in_dir)//swipe방향에 따라 먼치킨 굴리기
     {
-        Debug.Log(in_dir);
+        //Debug.Log(in_dir);
         int dest_x = 0;
         int dest_y = 0;
         int iter_x = 1;
@@ -289,7 +319,7 @@ public class Candy : MonoBehaviour
                 //if (i < 0 && j < 0)
                 //    continue;
                 string name_to_break = Name_translate(ind_x + i*iter_x,ind_y + j*iter_y);
-                Debug.Log(gameObject.name + " s name_translte : " + name_to_break);
+                //Debug.Log(gameObject.name + " s name_translte : " + name_to_break);
                 GameObject temp = GameObject.Find(name_to_break);
                 if (temp == null)
                     continue;
@@ -301,20 +331,16 @@ public class Candy : MonoBehaviour
         is_roll = true;
     }
 
-    public void Rainbow_form()//무지개캔디로 변환
-    {
-        this_type = types.Rainbow;
 
-        Destroy(its_Candy);
-        its_Candy = Inst_candy(Specials[(int)Special_list.Rainbow], zorder);
-    }
-
-    private void Translate_action(dir_4 in_dir)
+    private void Translate_action(dir_4 in_dir)//swipe에 따른 블록별 행동함수 분기점
     {
         switch (this_type)
         {
             case types.Ball:
                 ball_break(in_dir);
+                break;
+            case types.Rainbow:
+                Rainbow(in_dir);
                 break;
             default:
                 Request_change(in_dir);
@@ -323,7 +349,7 @@ public class Candy : MonoBehaviour
 
     }
 
-    private void Calc_angle()
+    private void Calc_angle()//swipe 방향 감지
     {//tan 특성상에 맞추어 좌우 구분 필요,4방향
         //
         dir_4 now_dir;
@@ -357,7 +383,7 @@ public class Candy : MonoBehaviour
         //Request_change(now_dir);
     }
     //change next_x, next_y
-    private void Translate_index(dir_4 in_dir)
+    private void Translate_index(dir_4 in_dir)//방향에 따른 검사할 이웃의 인덱스 갱신
     {
         switch (in_dir)
         {
@@ -382,7 +408,7 @@ public class Candy : MonoBehaviour
 
     }
 
-    private dir_4 Opposite_dir(dir_4 in_dir)
+    private dir_4 Opposite_dir(dir_4 in_dir)//반대항향 반환
     {
         dir_4 out_dir = 0;
         //enum Oppo{S,N,E, W}
@@ -406,7 +432,7 @@ public class Candy : MonoBehaviour
 
     }
 
-    private bool Is_on_proc()
+    private bool Is_on_proc()//이동중 검사 일어나지 않도록
     {
         bool out_bool = false;
         if (ready_to_bomb)
@@ -416,7 +442,7 @@ public class Candy : MonoBehaviour
         return out_bool;
     }
 
-    private GameObject Inst_ball(float z_priority)
+    private GameObject Inst_ball(float z_priority)//먼치킨 생성
     {
         GameObject out_obj = Instantiate(Specials[(int)Special_list.Ball], new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 
@@ -429,7 +455,7 @@ public class Candy : MonoBehaviour
         return out_obj;
     }
 
-    private GameObject Inst_candy(GameObject obj_type, float z_priority)
+    private GameObject Inst_candy(GameObject obj_type, float z_priority)//캔디 블록 생성
     {
         GameObject out_obj = Instantiate(obj_type, this.transform.position, Quaternion.identity) as GameObject;
 
@@ -442,7 +468,7 @@ public class Candy : MonoBehaviour
         return out_obj;
     }
 
-    private GameObject Inst_candy(GameObject obj_type, float z_priority, ref float sf)
+    private GameObject Inst_candy(GameObject obj_type, float z_priority, ref float sf)//캔디 블록 생성, 크기 다른 스프라이트 사용시 scale factor 갱신
     {
         GameObject out_obj = Instantiate(obj_type, this.transform.position, Quaternion.identity) as GameObject;
 
@@ -451,12 +477,11 @@ public class Candy : MonoBehaviour
         out_obj.transform.localScale = new Vector3(sf, sf, sf);
         out_obj.transform.SetParent(this.transform);
         out_obj.transform.Translate(0, 0, z_priority);
-        out_obj.GetComponent<SpriteRenderer>().enabled = false;
 
         return out_obj;
     }
 
-    public void Init(int candy_type, Vector2 begin_pos, Vector2 target_pos, float interv, int i, int j, int queues)
+    public void Init(int candy_type, Vector2 begin_pos, Vector2 target_pos, float interv, int i, int j, int queues)//캔디 생성시 초기화
     {
         //Debug.Log(candy_type);
         //Debug.Log(Candies[candy_type]);
@@ -464,8 +489,10 @@ public class Candy : MonoBehaviour
         dispenser = GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>();
         gameObject.name = Name_translate(i, j);
         //allow_change = true;//for debug
-        height = GameObject.Find("Level_manager").GetComponent<Level>().BackTile_height;
-        width = GameObject.Find("Level_manager").GetComponent<Level>().BackTile_width;
+        Level level_ = GameObject.Find("Level_manager").GetComponent<Level>();
+
+        height = level_.GetComponent<Level>().BackTile_height;
+        width = level_.BackTile_width;
         this.ind_y = j;
         this.ind_x = i;
         this.interval = interv;
@@ -475,6 +502,7 @@ public class Candy : MonoBehaviour
 
 
         its_Candy = Inst_candy(Candies[(int)this_type], zorder, ref scale_factor);// Instantiate(Candies[this_type], new Vector3(0,0,0), Quaternion.identity) as GameObject;
+        its_Candy.GetComponent<SpriteRenderer>().enabled = false;
         back_pos = this.transform.position;
 
         //scale_factor = interval / its_Candy.GetComponent<SpriteRenderer>().bounds.size.x;
@@ -484,7 +512,7 @@ public class Candy : MonoBehaviour
     }
 
 
-    private void Transforming(Candy other_candy)//backup and change
+    private void Transforming(Candy other_candy)//backup and change,
     {
         name_to_change = other_candy.name;
 
@@ -497,7 +525,7 @@ public class Candy : MonoBehaviour
 
         next_y = other_candy.ind_y;
     }
-    private void Cancel_change()
+    private void Cancel_change()//swipe cancel하기
     {
         do_cancel = false;
         //Debug.Log(gameObject.name + " s cancel is started, name to be changed is " + name_to_change);
@@ -515,7 +543,7 @@ public class Candy : MonoBehaviour
         Begin_Lerp_change();
     }
 
-    private void Refresh_after_change()
+    private void Refresh_after_change()//swipe후 정보 갱신
     {
         //Debug.Log("cancel or not of " + this.gameObject.name + " is " + do_cancel); 
 
@@ -533,12 +561,12 @@ public class Candy : MonoBehaviour
         Refresh_neighbors();
         //Debug.Log(gameObject.name + " s ind : [" + ind_x + "][" + ind_y + "]");
 
-        Check_score();
+        Check_score();//유효한 이동인지 검사, 아닐시 cancel
 
         Change_is_drop(false);
     }
 
-    private void Begin_Lerp_change()
+    private void Begin_Lerp_change()//swipe animation
     {
         //Debug.Log("Lerp move is begin at " + this.gameObject.name);
         change_dir = dest_pos - now_pos;
@@ -548,12 +576,14 @@ public class Candy : MonoBehaviour
         is_change = true;
     }
 
-    private void Lerp_change()
+    private void Lerp_change()//swipe animation2
     {
         this.transform.Translate(change_dir * Time.deltaTime * change_spd);
         //Debug.Log(this.gameObject.name + " is changing");
         if ((this.transform.position - dest_pos).magnitude < lerp_end_thres)
         {
+            if (this_type == types.Rainbow)
+                Rainbow_bomb();
             //Debug.Log(gameObject.name + "'s lerp is end");
             is_change = false;
             this.transform.position = dest_pos;
@@ -565,7 +595,7 @@ public class Candy : MonoBehaviour
         }
     }
 
-    private void Request_change(dir_4 direction)
+    private void Request_change(dir_4 direction)//neighbor candy에게 치환 요청
     {
         int now_ind = (int)direction;
         Refresh_neighbors();
@@ -576,26 +606,33 @@ public class Candy : MonoBehaviour
             return;
         }
         Candy to_memorize = neighbors[now_ind];
-        to_memorize.Refresh_neighbors();
-        //Debug.Log(to_memorize.name);
+        if (to_memorize.this_type != types.Rainbow)
+        {
+            to_memorize.Refresh_neighbors();
+            //Debug.Log(to_memorize.name);
 
-        Candy[] other_neighbors = neighbors[now_ind].neighbors;
-        other_neighbors[(int)Opposite_dir(direction)] = neighbors[now_ind];//바꼈을때 상황 적용
+            Candy[] other_neighbors = neighbors[now_ind].neighbors;
+            other_neighbors[(int)Opposite_dir(direction)] = neighbors[now_ind];//바꼈을때 상황 적용
 
-        bool temp = neighbors[now_ind].Response_change(this, direction);
-        if (Check_score(other_neighbors,to_memorize) || temp)
-            do_cancel = false;
+            bool temp = neighbors[now_ind].Response_change(this, direction);
+            if (Check_score(other_neighbors, to_memorize) || temp)
+                do_cancel = false;//
+            else
+                do_cancel = true;//둘다 false가 아니면 그대로 진행
+
+
+            //Debug.Log(do_cancel);
+            //Debug.Log(to_memorize.name);
+            to_memorize.do_cancel = do_cancel;
+
+
+            Transforming(to_memorize);
+
+            Begin_Lerp_change();
+        }
         else
-            do_cancel = true;
+            to_memorize.Rainbow(Opposite_dir(direction));
 
-
-        //Debug.Log(do_cancel);
-        //Debug.Log(to_memorize.name);
-        to_memorize.do_cancel = do_cancel;
-
-        Transforming(to_memorize);
-
-        Begin_Lerp_change();
         //Debug.Log(this.gameObject.name + " will be changed");
     }
 
@@ -629,7 +666,7 @@ public class Candy : MonoBehaviour
   
 
 
-    public void Move_to_new(int i, int j, Vector3 term_pos, int steps)
+    public void Move_to_new(int i, int j, Vector3 term_pos, int steps)//dispenser에서 요청받아 새 위치로 이동
     {
         Begin_drop(this.transform.position, term_pos, steps);
 
@@ -640,7 +677,7 @@ public class Candy : MonoBehaviour
     }
 
 
-    private void Stop_anim()
+    private void Stop_anim()//drop후 출렁이는 애니메이션, 정보 갱신
     {
         Change_is_drop(true);
         if (Stop_anim_time > Stop_anim_length)
@@ -657,7 +694,7 @@ public class Candy : MonoBehaviour
         its_Candy.transform.position = this.transform.position - new Vector3(0, scale_factor - its_Candy.transform.localScale.y, 0);
 
     }
-    private void End_lerp()
+    private void End_lerp()//drop 종료
     {
        // Debug.Log(gameObject.name + "' s lerp_end");
         spd = 0.000f;
@@ -667,12 +704,13 @@ public class Candy : MonoBehaviour
         is_stop_anim = true;
     }
 
-    private void Change_is_drop(bool in_bool)
+    private void Change_is_drop(bool in_bool)//이동중인 모든 캔디는 dispenser의 갱신 boolean (is_drop)을 true로 만드며, 종료시 false로
+        //만든다. 즉 모든 이동 종료 후 is_drop은 false이며, 결국 마지막 이동 이후 is_drop boolean에 따라 1회의 정보 갱신 및 캔디 생성
     {
         if (dispenser.is_drop != in_bool)
             dispenser.is_drop = in_bool;
     }
-    private void Lerp_move()
+    private void Lerp_move()//가속도를 적용하여 drop구현
     {
 
         //Debug.Log("im moving now....");
@@ -685,10 +723,10 @@ public class Candy : MonoBehaviour
         if ((this.transform.position - dest_pos).magnitude < lerp_end_thres)
             End_lerp();
         if (!is_show && this.transform.position.y < back_pos.y)
-            its_Candy.GetComponent<SpriteRenderer>().enabled = true;
+            its_Candy.GetComponent<SpriteRenderer>().enabled = true;//타일 밖에서 보이지 않도록
     }
 
-    private void Begin_drop(Vector2 begin_pos, Vector2 target_pos, int qs)
+    private void Begin_drop(Vector2 begin_pos, Vector2 target_pos, int qs)//생성시 실행되며, qs는 빈칸의 갯수로, 캔디들이 일렬로 정령되게 함
     {
         //my_powder.Clear();
         this.back_pos = new Vector3(begin_pos.x, begin_pos.y, zorder);
@@ -698,13 +736,13 @@ public class Candy : MonoBehaviour
         //Debug.Log("drop");
     }
 
-    private string Name_translate(int i, int j)
+    private string Name_translate(int i, int j)//인덱스에 따른 다른 캔디의 이름 반환
     {
-        return "Candy[" + i + "][" + j + "]";
+        return i + "," + j;// return "Candy[" + i + "][" + j + "]";
     }
 
 
-    private void bullet_load(Candy item)
+    private void bullet_load(Candy item)//화약에 candy 클래스 레퍼런스 추가
     {
         if (my_powder.Contains(item))
             return;
@@ -712,7 +750,7 @@ public class Candy : MonoBehaviour
     }
 
 
-    private void bullet_send(int tot_score)
+    private void bullet_send(int tot_score)//dispenser에 본인의 검사 후 화약 리스트 전달
     {
         dispenser.Recv_powders(my_powder, tot_score);
     }
@@ -720,7 +758,7 @@ public class Candy : MonoBehaviour
     private void bullet_trigger()
     {
         if (!ready_to_bomb)
-            ready_to_bomb = true;
+            ready_to_bomb = true;//폭발 대기중 bool
     }
 
     private void Fire_special(int tot_score)
@@ -747,7 +785,7 @@ public class Candy : MonoBehaviour
         ready_to_bomb = false;
     }
 
-    private bool Check_Candy_ball()
+    private bool Check_Candy_ball()//먼치킨용 점수 갱신
     {
         Refresh_neighbors();
         bool[] same_hood = new bool[4];
@@ -800,9 +838,8 @@ public class Candy : MonoBehaviour
         return checker;
     }
 
-    private bool Check_Candy_ball(Candy[] others_hood,Candy other)
+    private bool Check_Candy_ball(Candy[] others_hood,Candy other)//먼치킨용 검사
     {
-        //Refresh_neighbors();
         bool[] same_hood = new bool[4];
 
         for (int i = 0; i < 4; i++)
@@ -845,7 +882,7 @@ public class Candy : MonoBehaviour
             if (temp != null)
                 checker = temp.GetComponent<Candy>().Are_u_same(this_type);
         }
-        return checker;
+        return checker;//검사는 화약 반환x
     }
 
     public bool Check_all_dir(ref List<Candy> parent_powder)//candyball용 override, Candyball check만을 위함
@@ -966,8 +1003,6 @@ public class Candy : MonoBehaviour
             case additional.Rx:
                 for(int i = 0; i< width; i++)
                 {
-                    //if (i == item.ind_x)//feedback 방지
-                    //    continue;
                     string name_to_break = Name_translate(i, item.ind_y);
                     GameObject temp = GameObject.Find(name_to_break);
                     if (temp == null)
@@ -984,8 +1019,6 @@ public class Candy : MonoBehaviour
             case additional.Ry:
                 for (int j = 0; j < height; j++)
                 {
-                    //if (j == item.ind_y)//feedback 방지
-                    //    continue;
 
                     string name_to_break = Name_translate(item.ind_x, j);
                     GameObject temp = GameObject.Find(name_to_break);
@@ -1016,12 +1049,13 @@ public class Candy : MonoBehaviour
                             }
                     }
                 }
+                //collapse가 더 빠를수도 있으나 loop가 적어 for로 구현
                 //string name_to_break = Name_translate(ind_x + i, ind_y + j);
                 //string name_to_break = Name_translate(ind_x + i, ind_y - j);
                 //string name_to_break = Name_translate(ind_x - i, ind_y + j);
                 //string name_to_break = Name_translate(ind_x - i, ind_y - j);
-                Debug.Log("near candies : " + names_to_add.Count);
-                for (int i = 0; i < names_to_add.Count; i++)
+                //Debug.Log("near candies : " + names_to_add.Count);
+                for (int i = 0; i < names_to_add.Count; i++)//저장한 이름들을 가진 캔디를 검사
                 {
                     //if (names_to_add[i] == item.name)
                     //    continue;
@@ -1043,7 +1077,7 @@ public class Candy : MonoBehaviour
     }
 
 
-    public bool Are_u_same(types candy_type)
+    public bool Are_u_same(types candy_type)//응답용 확인함수
     {
         //Debug.Log("my:" + this_type + ", you: " + candy_type);
         if (candy_type != this_type)
@@ -1124,7 +1158,7 @@ public class Candy : MonoBehaviour
     }
 
 
-    public void Bomb()
+    public void Bomb()//점수 충족에 의한 폭발
     {
         dispenser.Refill_plz(this);
         //Debug.Log("candy " + gameObject.name + "requested refill");
@@ -1132,7 +1166,7 @@ public class Candy : MonoBehaviour
     }
 
 
-    public void Refresh_neighbors()
+    public void Refresh_neighbors()//이동 후 이웃 갱신
     {
 
     neighbors = new Candy[4];
@@ -1168,7 +1202,7 @@ public class Candy : MonoBehaviour
     }
 
 
-    public int Get_ind_x()
+    public int Get_ind_x()//Get,Set에서 오버플로우 발생하여 따로 배치
     {
         return ind_x;
     }
@@ -1178,14 +1212,10 @@ public class Candy : MonoBehaviour
         return ind_y;
     }
 
-    public string Get_name()
-    {
-        return this.gameObject.name;
-    }
-
     // Update is called once per frame
     void Update()
     {
+        //lerp형 함수들 제어
         if (is_lerp)
         {
             Lerp_move();
@@ -1195,8 +1225,8 @@ public class Candy : MonoBehaviour
             Stop_anim();
         if (is_change)
             Lerp_change();
-        if (!dispenser.is_drop)
-            Refresh_neighbors();
+        //if (!dispenser.is_drop)
+        //    Refresh_neighbors();
         if (is_roll)
             ball_move();
         if (is_wait)

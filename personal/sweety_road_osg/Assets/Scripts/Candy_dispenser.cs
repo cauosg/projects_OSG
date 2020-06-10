@@ -62,7 +62,7 @@ public class Candy_dispenser : MonoBehaviour {
         Reset_fills();
     }
 
-    private void Reset_fills()
+    private void Reset_fills()//저장 변수 초기화
     {
         
         empty_pos.Clear();
@@ -79,12 +79,12 @@ public class Candy_dispenser : MonoBehaviour {
        
     }
 
-    public void Dispense_pos()
+    public void Dispense_pos()//csv에 따른 dispense위치 설정
     {
         for (int i = 0; i < width; i++)
         {
             //empty_pos.Add(new List<int>());
-            dispense_candies.Add(0);
+            dispense_candies.Add(0);//저장 영역 초기화, 이중 리스트에 초기값 넣기 위함
             for (int j = 0; j < height; j++)
             {
 
@@ -99,9 +99,8 @@ public class Candy_dispenser : MonoBehaviour {
         Debug.Log(dispense_candies.Count);
     }
 
-    public void Dispense_one(int candy_type, int i, int j, int origin, int ques)
+    public void Dispense_one(int candy_type, int i, int j, int origin, int ques)//1개 캔디 생성 및 초기화 
     {
-        //fordebug
         //note, contructor사용 불가하므로 init 만들것
         //Debug.Log("this candy is [" + i + "][" + j + "]");
 
@@ -109,7 +108,7 @@ public class Candy_dispenser : MonoBehaviour {
         a_candy.GetComponent<Candy>().Init(candy_type, Get_candypos(i,origin), Get_candypos(i,j), interval,i, j, ques);
     }
 
-    private Vector3 Get_candypos(int i, int j)
+    private Vector3 Get_candypos(int i, int j)//인덱스에 따른 위치
     {
         float zorder = -0.2f;
         //cp-4step : origin
@@ -120,7 +119,7 @@ public class Candy_dispenser : MonoBehaviour {
         return new Vector3(x_pos, y_pos, zorder);
     }
 
-    public Vector2 Get_dest_ball(int i, int j)
+    public Vector2 Get_dest_ball(int i, int j)//먼치킨용 도착위치 계산함수
     {
       
         float x_pos = center_point.x - (4 - i) * interval;
@@ -129,7 +128,7 @@ public class Candy_dispenser : MonoBehaviour {
         return new Vector2(x_pos, y_pos);
     }
 
-    public void Refill_plz(Candy in_candy)
+    public void Refill_plz(Candy in_candy)//1개 캔티가 사라질 때마다 호출되며, 사라진 곳들과 수량을 저장
     {
         if (dispense_candies_names.Contains(in_candy.name))
             return;
@@ -142,16 +141,16 @@ public class Candy_dispenser : MonoBehaviour {
         //Debug.Log("Candy Refill is requested at [" + i + "][" + j + "]");
     }
 
-    public void Recv_powders(List<Candy> a_set, int tot_score)//우선순위를 위해 큐에 화약 저장
+    public void Recv_powders(List<Candy> a_set, int tot_score)//우선순위를 위해 각 캔티로부터 정보 받아 큐에 화약 저장
     {
         explode_queue.Add(a_set);
         scores_queue.Add(tot_score);
     }
 
-    public void Explode_candies()
+    public void Explode_candies()//점화
     {
         int max_ind = 0;
-        Debug.Log("total count of explode queues : " + explode_queue.Count);
+        //Debug.Log("total count of explode queues : " + explode_queue.Count);
         for(int i = 0; i < explode_queue.Count; i++)
         {
             if (max_ind < scores_queue[i])
@@ -176,7 +175,7 @@ public class Candy_dispenser : MonoBehaviour {
     }
 
 
-    public void Candy_drop()
+    public void Candy_drop()//캔디의 새 위치 갱신 및 빈자리만큼 캔디 생성
     {
         if (is_drop)
             return;
@@ -205,8 +204,9 @@ public class Candy_dispenser : MonoBehaviour {
             for (int j = 0; j < height; j++)//max까지 포함하기 위해 +1
             {
                 int reverse_j = height - j;
-                string drop_candy_name = "Candy[" + i + "][" + reverse_j + "]";
-                
+                //string drop_candy_name = "[" + i + "][" + reverse_j + "]";
+                string drop_candy_name = i + "," + j;
+
                 GameObject temp = GameObject.Find(drop_candy_name);
                 if (temp == null)
                     continue;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
+
 public class Tile_loader : MonoBehaviour
 {
     /*
@@ -23,12 +24,13 @@ public class Tile_loader : MonoBehaviour
  * 1: B
  * 2: hole
  */
+    public StreamReader reader;
     public string Tile_level = "";
     private int width = 0;
     private int height = 0;
     private string base_path;
 
-    private List<List<int>> Tile_map = new List<List<int>>();
+    public List<List<int>> Tile_map = new List<List<int>>();
 
     // Use this for initialization
     void Start()
@@ -36,15 +38,54 @@ public class Tile_loader : MonoBehaviour
 
 
     }
+    //public void Init()
+    //{
 
+
+    //    base_path = "file:///" + Application.persistentDataPath;
+    //    string file_name = base_path + "/" + Tile_level + ".csv";
+    //    //StreamReader reader = new StreamReader(file_name);
+    //    WWW www = new WWW(file_name);
+
+    //    do
+    //    {
+    //        string a_line = reader.ReadLine();
+    //        List<int> a_line_int = new List<int>();
+    //        int now_length = 0;
+
+    //        if (a_line == null)//비어있으면 중지
+    //            break;
+
+    //        for (int i = 0; i < a_line.Length; i++)//,를 제외한 숫자를 차례대로 입력
+    //        {
+    //            if (a_line[i] != ',')
+    //            {
+    //                a_line_int.Add(a_line[i] - '0');
+    //                now_length++;
+    //            }
+    //        }
+    //        if (now_length > width)//최대 길이를 width로 저장
+    //            width = now_length;
+    //        //Debug.Log(a_line_int[2]);
+    //        Tile_map.Add(a_line_int);
+    //        //Tile_map.
+
+    //        //Tile_map.Add(a_line);
+    //    } while (true);
+
+    //    height = Tile_map.Count;
+
+
+    //    Print_all();
+    //}
     public void Init()
     {
 
-
-        base_path = Application.dataPath + "/Tiles/";
-        Debug.Log(base_path + Tile_level + ".csv");
-
-        StreamReader reader = new StreamReader(base_path + Tile_level + ".csv");
+        base_path = "file:///" + Application.persistentDataPath;
+        string file_name =  base_path + "/" + Tile_level + ".csv";
+        //StreamReader reader = new StreamReader(file_name);
+        TextAsset source = Resources.Load<TextAsset>(Tile_level);
+        StringReader reader = new StringReader(source.text);
 
         do
         {
@@ -74,15 +115,6 @@ public class Tile_loader : MonoBehaviour
 
         height = Tile_map.Count;
 
-        //Debug.Log("width:" + width);
-        //Debug.Log("height:" + height);
-
-
-        //int ind = 0;
-        //while (ind < Tile_map.Count)
-        //{
-        //    Debug.Log(Tile_map[ind++]);
-        //}
 
         Print_all();
     }

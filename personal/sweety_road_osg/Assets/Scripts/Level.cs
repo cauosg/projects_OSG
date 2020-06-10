@@ -30,16 +30,18 @@ public class Level : MonoBehaviour {
         // Use this for initialization
 
     void Start () {
+        Application.targetFrameRate = 60;
+        Tile_loader loader = GameObject.Find("Tile_loader").GetComponent<Tile_loader>();
+        loader.Init();
+        Tile_map = loader.Get_Tile_map();
+        BackTile_width = loader.Get_width();
+        BackTile_height = loader.Get_height();
+        Destroy(loader.gameObject);
 
-        GameObject.Find("Tile_loader").GetComponent<Tile_loader>().Init();
-        Tile_map = GameObject.Find("Tile_loader").GetComponent<Tile_loader>().Get_Tile_map();
-        BackTile_width = GameObject.Find("Tile_loader").GetComponent<Tile_loader>().Get_width();
-        BackTile_height = GameObject.Find("Tile_loader").GetComponent<Tile_loader>().Get_height();
         Set_res();
-        GameObject.Find("BackTile_drawer").GetComponent<BackTile_drawer>().Draw_BackTile(Tile_map,BackTile_width,BackTile_height,level_res);
-        //GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Init();
-        //GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Receive_Tilemap(Tile_map, BackTile_width, BackTile_height);
-        //GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Dispense_pos();
+        BackTile_drawer drawer = GameObject.Find("BackTile_drawer").GetComponent<BackTile_drawer>();
+        drawer.Draw_BackTile(Tile_map,BackTile_width,BackTile_height,level_res);
+        Destroy(drawer.gameObject);
     }
 
     //-----stack overflow 이유 추후 찾아보기
@@ -54,8 +56,8 @@ public class Level : MonoBehaviour {
     //-------------
     private void Set_res()
     {
-        level_res.x = 720;
-        level_res.y = 1280;
+        level_res.x = Screen.width;
+        level_res.y = Screen.height;
     }
     public Vector2 Get_res()
     {

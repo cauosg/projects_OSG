@@ -25,13 +25,12 @@ public class BackTile_drawer : MonoBehaviour {
     public Vector2 center_point;
     public int queues = 7;
     private float cam_ratio;
-    //private Vector2 level_res;
 	// Use this for initialization
 	void Start () {
 		
 	}
 	
-    private void Get_camsize(Vector2 res)
+    private void Get_camsize(Vector2 res)//종횡비
     {
         float cam_size = GameObject.Find("Main Camera").GetComponent<Camera>().orthographicSize;
         float horz_size = cam_size * res.x / res.y;
@@ -39,7 +38,7 @@ public class BackTile_drawer : MonoBehaviour {
 
     }
 
-    private void Set_cp()
+    private void Set_cp()//중앙설정, 정중앙보다 살짝 아래
     {
         //interval = Mathf.Ceil(0.1f * Mathf.Min(res.x, res.y)) - 1;
         center_point.x = 0;
@@ -49,7 +48,7 @@ public class BackTile_drawer : MonoBehaviour {
         //Debug.Log(center_point);
     }
 
-    private Vector3 Get_tilepos(int i, int j,int BackTile_type)
+    private Vector3 Get_tilepos(int i, int j,int BackTile_type)//인덱스에 따른 transform 좌표 계산
     {
         float zorder = 0;
         if (BackTile_type > 1)
@@ -62,12 +61,12 @@ public class BackTile_drawer : MonoBehaviour {
         return new Vector3(x_pos, y_pos, zorder);
     }
 
-    public void Draw_BackTile(List<List<int>> Tile_map,int width, int height, Vector2 res)
+    public void Draw_BackTile(List<List<int>> Tile_map,int width, int height, Vector2 res)//배경 타일만을 체크모양으로 그리며, csv에 저장된 정보에 따라 유연하게 사용 가능
     {
         Get_camsize(res);
         Set_cp();
-        GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Receive_Tilemap(Tile_map, width, height,interval,center_point);
-        //level_res = res;
+        Candy_dispenser dispenser = GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>();
+        dispenser.Receive_Tilemap(Tile_map, width, height,interval,center_point);
         //Debug.Log(res);
         //List<List<bool>> valid_space = new List<List<bool>>();
         bool check_marker = true;//false:B, true:A
@@ -108,9 +107,9 @@ public class BackTile_drawer : MonoBehaviour {
                     a_hole.transform.localScale = new Vector3(scale_hole, scale_hole, scale_hole);
                     a_hole.transform.SetParent(a_tile.transform);
                 }
-                else//기본 캔디 배치 및 배열 넘겨주기
+                else//기본 캔디 배치 및 배열 넘겨주기, 배경타일은 캔디들과 연결점이 없으며, 개인적으로 행동, 질서를 위한 제어는 dispenser에서 수행
                 {
-                    GameObject.Find("Candy_dispenser").GetComponent<Candy_dispenser>().Dispense_one(tile_type, i, j, 0,queues);
+                    dispenser.Dispense_one(tile_type, i, j, 0,queues);
                     
                     //a_line_bool.Add()
                 }
