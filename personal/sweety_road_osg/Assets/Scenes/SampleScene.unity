@@ -121,7 +121,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 369837789}
-  - component: {fileID: 369837788}
   - component: {fileID: 369837790}
   m_Layer: 0
   m_Name: Tile_loader
@@ -130,17 +129,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &369837788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 369837787}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94b16b455a6139943b172de4b531d3bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &369837789
 Transform:
   m_ObjectHideFlags: 0
@@ -283,7 +271,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 286016c2cf9af3240a68a75d7450895f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Candy: {fileID: 1012859276041306, guid: 1270a029efc3c3d408105df139b698cf, type: 2}
+  _Candy: {fileID: 1012859276041306, guid: 025f9d8a457a0394bbde28ba58d72b84, type: 2}
+  is_drop: 1
+  is_process: 0
+  is_update: 0
+  is_move: 0
+  fired: 0
+  powders: []
 --- !u!1 &1618418069
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,6 +322,9 @@ MonoBehaviour:
   - {fileID: 1383187139657856, guid: d46f28571c27111419d6a1433d5b0d5b, type: 2}
   - {fileID: 1250595056524980, guid: 153451d77f2d8934b87c82d6cd52371d, type: 2}
   - {fileID: 1287730938253974, guid: f79ea2760a9f7b744ad0a3e4d2f98042, type: 2}
+  interval: 0
+  center_point: {x: 0, y: 0}
+  queues: 7
 --- !u!1 &1685001686
 GameObject:
   m_ObjectHideFlags: 0

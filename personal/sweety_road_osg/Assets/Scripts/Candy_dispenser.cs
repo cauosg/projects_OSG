@@ -20,25 +20,20 @@ public class Candy_dispenser : MonoBehaviour {
     private int width, height;
     private int[] pos_ind, valid_candies;
 
-    //private List<List<GameObject>> tot_candies;
-
     private List<int> dispense_pos, dispense_candies;//from top
-    //private List<GameObject> dispense_candies;
-    //private List<int>[] dispense_candies;//,Candy_pos;
-    //private List<int> ;
+
     
 
     private Vector2 center_point;
     private float interval;
-    //private bool is_drop = true;
 
-    //forDebeug
-    //private bool once = true;
     // Use this for initialization
     void Start () {
         dispense_pos = new List<int>();
         dispense_candies = new List<int>();
         dispense_candies_names = new List<string>();
+        explode_queue = new List<List<Candy>>();
+        scores_queue = new List<int>();
         empty_pos = new List<List<int>>();
 
         pos_ind = new int[2];
@@ -104,23 +99,6 @@ public class Candy_dispenser : MonoBehaviour {
         Debug.Log(dispense_candies.Count);
     }
 
-    //public void Dispense()
-    //{
-    //    for (int i = 0; i < width; i++)
-    //    {
-    //        List<int> Temp = new List<int>();
-    //        Temp.Add(0);
-    //        empty_pos.Add(Temp);
-    //        for (int j = 0; j < height; j++)
-    //        {
-
-    //            int candy_type = Tile_map[i][j];//transpose
-    //            if (candy_type < 2)
-    //                continue;
-    //        }
-    //    }
-    //}
-
     public void Dispense_one(int candy_type, int i, int j, int origin, int ques)
     {
         //fordebug
@@ -141,6 +119,16 @@ public class Candy_dispenser : MonoBehaviour {
 
         return new Vector3(x_pos, y_pos, zorder);
     }
+
+    public Vector2 Get_dest_ball(int i, int j)
+    {
+      
+        float x_pos = center_point.x - (4 - i) * interval;
+        float y_pos = center_point.y - (j - 4) * interval;
+
+        return new Vector2(x_pos, y_pos);
+    }
+
     public void Refill_plz(Candy in_candy)
     {
         if (dispense_candies_names.Contains(in_candy.name))
@@ -154,22 +142,39 @@ public class Candy_dispenser : MonoBehaviour {
         //Debug.Log("Candy Refill is requested at [" + i + "][" + j + "]");
     }
 
-
+    public void Recv_powders(List<Candy> a_set, int tot_score)//우선순위를 위해 큐에 화약 저장
+    {
+        explode_queue.Add(a_set);
+        scores_queue.Add(tot_score);
+    }
 
     public void Explode_candies()
     {
+        int max_ind = 0;
+        Debug.Log("total count of explode queues : " + explode_queue.Count);
+        for(int i = 0; i < explode_queue.Count; i++)
+        {
+            if (max_ind < scores_queue[i])
+                max_ind = i;
+        }
+
+        //Debug.Log("max_ind : " + max_ind);
+        //Debug.Log("counts : " + explode_queue[max_ind].Count);
         List<string> broken_candies = new List<string>();
-        for (int i = 0; i< powders.Count; i++)
+        for (int i = 0; i < explode_queue[max_ind].Count; i++)
         {
             //Debug.Log("Candy will destroyed is " + powders[i].gameObject.name);
-            if (broken_candies.Contains(powders[i].name))
+            if (broken_candies.Contains(explode_queue[max_ind][i].name))
                 continue;
-            broken_candies.Add(powders[i].gameObject.name);
-            powders[i].Bomb();            
+            broken_candies.Add(explode_queue[max_ind][i].gameObject.name);
+            explode_queue[max_ind][i].Bomb();
         }
-        powders.Clear();
+        explode_queue.Clear();
+        scores_queue.Clear();
+        //powders.Clear();
         //Reset_fills();
     }
+
 
     public void Candy_drop()
     {
@@ -215,7 +220,7 @@ public class Candy_dispenser : MonoBehaviour {
             //Debug.Log("max step is " + max_steps);
             for (int j = 0; j < dispense_candies[i]; j++)
             {
-                Dispense_one(valid_candies[Random.Range(0,valid_candies.Length-1)],i,j + 1, 0 , move_steps[i]+1);
+                Dispense_one(valid_candies[Random.Range(0,valid_candies.Length-1)],i,j + 1, 0 , dispense_candies[i]);
             }
         }
 
@@ -230,10 +235,5 @@ public class Candy_dispenser : MonoBehaviour {
     void Update () {
         if (!is_drop)
             Candy_drop();
-        //if (fired) {
-        //    Explode_candies();
-        //    powders.Clear();
-        //    fired = false;
-        //}
 	}
 }

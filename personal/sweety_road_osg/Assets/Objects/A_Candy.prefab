@@ -70,6 +70,13 @@ MonoBehaviour:
   - {fileID: 1441378732782470, guid: dce7b51e6e226f3479ad898c89dd2a33, type: 2}
   - {fileID: 1253339016925776, guid: 68e6f708112b95548b5f5eacc40d4e15, type: 2}
   - {fileID: 1924142997421744, guid: d6ad355ba7b939648902445f374bb22e, type: 2}
+  Specials:
+  - {fileID: 1794996432595282, guid: e9cb107e281667549a0415905c51e479, type: 2}
+  - {fileID: 1437460650661140, guid: e76c79e2eaab6fb468cc7d9d090d7c2e, type: 2}
+  Additional:
+  - {fileID: 1716341036585048, guid: 63d429692a1869140abe42089efef45f, type: 2}
+  - {fileID: 1450140188276432, guid: 659f6aa8b55b08149a72363766d5d86f, type: 2}
+  - {fileID: 1605321353331284, guid: d062c81e206aba44487b9e7066e97bab, type: 2}
   accel_factor: 120
   max_spd: 0.2
   zorder: -0.2
@@ -79,4 +86,10 @@ MonoBehaviour:
   stay_range: 0.2
   change_spd: 5
   change_sensitivity: 4
+  lerp_end_thres: 0.1
+  candy_ball_score: 4
+  roll_spd: 5
   ready_to_bomb: 0
+  this_type: 0
+  addy: 0
+  neighbors: []
